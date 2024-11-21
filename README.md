@@ -8,12 +8,12 @@ Driverless features a live map of the server showing the current postions of all
 
 ## Installation 
 
-1. Install NodeJS
+1. Install NodeJS  
 
 Windows:  
-[NodeJS prebuilt installer](https://nodejs.org/en/download/prebuilt-installer)
+[NodeJS prebuilt installer](https://nodejs.org/en/download/prebuilt-installer)  
 
- Linux:
+Linux:
 ```bash
   sudo apt install nodejs
 ```
@@ -28,15 +28,20 @@ Windows:
 4. Create a new directory `DriverlessPlugin` in `Resources/Server`
 
 5. Move the Driverless plugin `Driverless.lua` from `Driverless/plugins/` to `Driverless/Resources/Server/DriverlessPlugin/`
+
+6. Run in `/Driverless`
+```bash
+  npm install
+```
 ## Starting Server
 Run the server with the command:
 
-- Windows:
+Windows:
 ```bash
   node main.js
 ```
 
-- Linux:
+Linux:
 ```bash
   sudo node main.js
 ```
