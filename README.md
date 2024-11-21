@@ -27,9 +27,11 @@ Linux:
 
 4. Create a new directory `DriverlessPlugin` in `Resources/Server`
 
-5. Move the Driverless plugin `Driverless.lua` from `Driverless/plugins/` to `Driverless/Resources/Server/DriverlessPlugin/`
+5. Create a new directory `Disabled` in `Resources`
 
-6. Run in `/Driverless`
+6. Move the Driverless plugin `Driverless.lua` from `Driverless/plugins/` to `Driverless/Resources/Server/DriverlessPlugin/`
+
+7. Run in `/Driverless`
 ```bash
   npm install
 ```
@@ -45,3 +47,5 @@ Linux:
 ```bash
   sudo node main.js
 ```
+
+The webpage can now be accessed at localhost:3000
