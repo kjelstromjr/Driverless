@@ -45,5 +45,3 @@ Linux:
 ```bash
   sudo node main.js
 ```
-
-You may need to install multiple dependencies with npm
