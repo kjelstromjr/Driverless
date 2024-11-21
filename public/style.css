@@ -1,0 +1,460 @@
+:root {
+    --body1: hsl(0, 0%, 0%);
+    --body2: hsl(0, 0%, 10%);
+    --body3: hsl(0, 0%, 20%);
+
+    --text: white;
+
+    --action: rgb(49 49 227);
+
+    --go: green;
+    --stop: red;
+}
+
+body {
+    margin: 20px;
+    background-color: var(--body1);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+.horizontalGrid {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.box {
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text);
+}
+
+.body2 {
+    background-color: var(--body2);
+}
+
+.body3 {
+    background-color: var(--body3);
+}
+
+.body2-outline {
+    border: var(--body2) 2px solid;
+}
+
+.body3-outline {
+    border: var(--body3) 2px solid;
+}
+
+.action {
+    color: var(--action);
+}
+
+.action-background {
+    background-color: var(--action);
+}
+
+.go {
+    color: var(--go);
+}
+
+.go-background {
+    background-color: var(--go);
+}
+
+.stop {
+    color: var(--stop);
+}
+
+.stop-background {
+    background-color: var(--stop);
+}
+
+.horizontal-center {
+    display: flex;
+    justify-content: center;
+}
+
+.horizontal-right {
+    display: flex;
+    justify-content: end;
+}
+
+#right-panel {
+    position: relative;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--text);
+}
+
+.text-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 16px;
+}
+.text-input input, select {
+    background-color: var(--body3);
+    border: none;
+    outline: none;
+    color: inherit;
+    font-size: inherit;
+    width: 180px;
+}
+.text-input select {
+    cursor: pointer;
+}
+
+.actionbutton {
+    font-size: 16px;
+    color: white;
+    background-color: var(--action);
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+}
+.actionbutton:hover {
+    background-color: rgb(39, 39, 173);
+}
+.actionbutton:disabled {
+    background-color: var(--body3);
+    cursor: default;
+    color: hsl(0, 0%, 53%);
+}
+
+.defaultbutton {
+    font-size: 16px;
+    color: white;
+    background-color: var(--body3);
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 5px
+}
+.defaultbutton:hover {
+    background-color: hsl(0, 0%, 15%);
+}
+.defaultbutton:disabled {
+    background-color: hsl(0, 0%, 50%);
+    cursor: default;
+}
+
+.stopbutton {
+    font-size: 16px;
+    color: white;
+    background-color: var(--stop);
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px
+}
+.stopbutton:hover {
+    background-color: rgb(177, 0, 0);
+}
+.stopbutton:disabled {
+    background-color: hsl(0, 0%, 50%);
+    cursor: default;
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#logo {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.popup {
+    padding: 30px;
+    color: var(--text);
+    text-align: center;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height: 80%;
+}
+::-webkit-scrollbar {
+    background-color: var(--body2);
+    width: 5px;
+    height: 5px;
+    cursor: pointer;
+    padding: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--body3);
+}
+
+.full-center {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+#restart {
+    display: none;
+}
+
+#offline {
+    display: none;
+}
+
+#restarting {
+    display: none;
+}
+
+#upload-popup {
+    display: none;
+}
+
+#mods {
+    /* position: absolute;
+    top: 10px;
+    right: 10px; */
+    float: right;
+    color: white;
+    background-color: var(--body3);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+}
+#mods:hover {
+    background-color: hsl(0, 0%, 15%);
+}
+
+#playersOnline {
+    display: flex;
+    justify-content: space-between;
+}
+
+.verticle-center {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.verticle-stack {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background-color: transparent;
+    border: 2px var(--text) solid;
+    color: var(--text);
+    padding: 5px;
+    cursor: pointer;
+}
+
+.mod {
+    padding: 10px;
+    border-radius: 10px;
+    transition: background-color 0.1s linear;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+/* .mod:hover {
+    background-color: hsl(0, 0%, 15%);
+} */
+
+.page-link {
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.page-link:hover {
+    background-color: hsl(0, 0%, 15%);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--body2);
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+    background-color: var(--action);
+}
+
+.switch input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+#upload-page {
+    position: absolute;
+    top: 0px;
+    left: 100%;
+    transition: left 0.25s linear;
+}
+
+.page {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: var(--body2);
+}
+
+.back-arrow {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.1s linear;
+}
+.back-arrow:hover {
+    background-color: var(--body3);
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.1s linear;
+}
+.close:hover {
+    background-color: var(--body3);
+}
+
+.listHeader {
+    text-align: start;
+    width: 100%;
+}
+
+#message {
+    display: flex;
+    justify-content: center;
+}
+
+#message div {
+    background: rgb(200, 200, 200);
+    border-radius: 4px;
+    position: fixed;
+    top: 30px;
+    padding: 20px;
+    font-size: 20px;
+    font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: bold;
+    animation: word 1s ease-out;
+    z-index: 998;
+}
+
+@keyframes word {
+    from {
+        opacity: 0;
+        top: 20px;
+    }
+
+    to {
+        opacity: 1;
+        top: 30px;
+    }
+}

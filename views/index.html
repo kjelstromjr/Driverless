@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beamng.drive server</title>
+    <link rel="stylesheet" href="beam.css">
+    <link rel="stylesheet" href="grid.css">
+</head>
+<body>
+    <div id="message"></div>
+    <!-- <div class="horizontalGrid" style="gap: 10px">
+        <div class="box body2">Body 2</div>
+        <div class="box body3">Body 3</div>
+        <div class="box body2-outline">Body 2 Outline</div>
+        <div class="box body3-outline">Body 3 Outline</div>
+        <div class="box action body2">Action</div>
+        <div class="box action-background">Action Background</div>
+        <div class="box go body2">Go</div>
+        <div class="box go-background">Go Background</div>
+        <div class="box stop body2">Stop</div>
+        <div class="box stop-background">Stop Background</div>
+    </div> -->
+    <canvas id="canvas"></canvas>
+
+    <div class="full-center" id="restart">
+        <div class="popup body2">
+            <h1>Woah there!</h1>
+            <span>You need to restart the server to add updates.</span>
+            <span>This means all players will be disconnected.</span>
+            <br><br>
+            <div class="horizontalGrid">
+                <button class="stopbutton" onclick="restart()">Restart</button>
+                <button class="defaultbutton" onclick="closePopups()">Cancel</button>
+            </div>
+        </div>  
+    </div>
+    
+    <div class="full-center" id="offline">
+        <div class="popup body2">
+            <h1>Oop</h1>
+            <span>The server is currently offline. No idea when it will be back.</span>
+            <br><br>
+            <div class="horizontalGrid">
+                <div class="defaultbutton" onclick="closePopups()">Explore Map</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-center" id="restarting">
+        <div class="popup body2">
+            <h1>BRB</h1>
+            <span>The server is currently restarting...</span>
+            <br><br>
+            <div class="horizontalGrid">
+                <div class="defaultbutton" onclick="closePopups()">Explore Map</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-center" id="upload-popup">
+        <div class="popup body2 verticle-stack" id="upload-content">
+            <div class="close" onclick="closePopups()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                </svg>
+            </div>
+            <h1>Mods</h1>
+            <div class="page-link body3" onclick="uploadPage()">
+                <div class="horizontalGrid">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                        <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                    <span>Upload files</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                </svg>
+            </div>
+
+            <span class="listHeader">Installed Mods</span>
+
+            <button id="modsUpdateBtn" class="actionbutton" onclick="changeMods()" disabled>Update</button>
+
+            <!-- <div class="mod body3">
+                <span>car_jump_arena_free</span>
+                <label class="switch" onclick="updateMods()">
+                    <input type="checkbox" name="name" id="id" checked>
+                    <div class="slider"></div>
+                </label>
+            </div> -->
+
+        </div>
+    </div>
+
+    <div class="horizontal-right">
+        <div id="right-panel" class="body2">
+            <div class="options">
+                <span class="text-input" id="playersOnline">
+                    <div class="verticle-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                        </svg>
+                        <span id="players-online">0 / 8</span>
+                    </div>
+                    <div id="mods" onclick="openMods()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plugin" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 1 2.898 5.673c-.167-.121-.216-.406-.002-.62l1.8-1.8a3.5 3.5 0 0 0 4.572-.328l1.414-1.415a.5.5 0 0 0 0-.707l-.707-.707 1.559-1.563a.5.5 0 1 0-.708-.706l-1.559 1.562-1.414-1.414 1.56-1.562a.5.5 0 1 0-.707-.706l-1.56 1.56-.707-.706a.5.5 0 0 0-.707 0L5.318 5.975a3.5 3.5 0 0 0-.328 4.571l-1.8 1.8c-.58.58-.62 1.6.121 2.137A8 8 0 1 0 0 8a.5.5 0 0 0 1 0"/>
+                        </svg>
+                    </div>
+                    <!-- <div id="upload" onclick="openUpload()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708z"/>
+                            <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                        </svg>
+                    </div> -->
+                </span>
+            </div>
+            <div id="server-settings" class="options">
+                <div class="text-input body3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"/>
+                    </svg>
+                     <select id="maps">
+                        <option value="undefines">maps not loaded</option>
+                     </select>
+                </div>
+                <div class="text-input body3" id="numPlayers">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                    </svg>
+                    <input id="players" type="number" value="8">
+                </div>
+                <div class="text-input body3" id="numCars">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-car-front-fill" viewBox="0 0 16 16">
+                        <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/>
+                    </svg>
+                    <input id="cars" type="number" value="10">
+                </div>
+                <button id="updateBtn" class="actionbutton" onclick="updateCall()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <a id="logo" href="https://ilikepizza.org"><img src="favicon-16x16.png" alt="ilikepizza.org logo"></a> -->
+
+    <script src="mapEngine.js"></script>
+    <script src="beam.js"></script>
+</body>
+</html>
