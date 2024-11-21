@@ -12,13 +12,23 @@ The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
 Additional Disclaimer:
-This project is an independent, third-party development and is not affiliated with, endorsed by, or associated with BeamMP or BeamNG.drive. BeamMP and BeamNG.drive are trademarks of their respective owners.
+This project is an independent, third-party development and is not affiliated
+with, endorsed by, or associated with BeamMP or BeamNG.drive. BeamMP and
+BeamNG.drive are trademarks of their respective owners.
 
-The software provided by this project is a user interface (UI) wrapper designed to facilitate easier interaction with the BeamMP server. It does not modify or distribute any proprietary BeamMP server code and relies on the official BeamMP server for functionality.
+The software provided by this project is a user interface (UI) wrapper designed
+to facilitate easier interaction with the BeamMP server. It does not modify or
+distribute any proprietary BeamMP server code and relies on the official BeamMP
+server for functionality.
 
-Use of this software is at your own risk. The developers of this project are not responsible for any damage, data loss, or other issues that may occur as a result of using this software. By using this project, you agree to adhere to all terms and conditions set forth by BeamMP and BeamNG.drive, including their respective license agreements and community guidelines.
+Use of this software is at your own risk. The developers of this project are not
+responsible for any damage, data loss, or other issues that may occur as a result
+of using this software. By using this project, you agree to adhere to all terms
+and conditions set forth by BeamMP and BeamNG.drive, including their respective
+license agreements and community guidelines.
 
-For official support, updates, or inquiries regarding BeamMP or BeamNG.drive, please refer to their official channels.
+For official support, updates, or inquiries regarding BeamMP or BeamNG.drive,
+please refer to their official channels.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
