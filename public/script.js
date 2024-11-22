@@ -205,9 +205,9 @@ function restart() {
         err("An Error Occurred While Loading Data");
     });
 
-    // window.setTimeout(() => {
-    //     window.location.reload();
-    // }, 1000);
+    window.setTimeout(() => {
+        window.location.reload();
+    }, 5000);
 }
 
 function restarting() {
