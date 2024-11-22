@@ -186,11 +186,11 @@ function restart() {
         maxCars: document.getElementById("cars").value
     }
 
-    fetch(window.location.origin + ":" + window.location.port + "/update-settings", {
+    fetch(window.location.origin  + "/update-settings", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":" + window.location.port + ""
+            "Origin": window.location.origin  + ""
         },
         body: JSON.stringify(data)
     }).then(res => {
@@ -263,7 +263,7 @@ async function upload() {
                 document.getElementById("yup").style.display = "block";
             }, 60000);
 
-            const response = await fetch(window.location.origin + ":" + window.location.port + "/upload-mod", {
+            const response = await fetch(window.location.origin  + "/upload-mod", {
                 method: 'POST',
                 body: formData,
             });
@@ -337,11 +337,11 @@ async function loadFile() {
 loadFile();
 
 function getData() {
-	fetch(window.location.origin + ":" + window.location.port + "/get-player-position", {
+	fetch(window.location.origin  + "/get-player-position", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":" + window.location.port + ""
+            "Origin": window.location.origin  + ""
         }
     }).then(res => {
         clearPlayers();
@@ -363,11 +363,11 @@ function getData() {
 }
 
 function getMaps() {
-    fetch(window.location.origin + ":" + window.location.port + "/maps", {
+    fetch(window.location.origin  + "/maps", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":" + window.location.port + ""
+            "Origin": window.location.origin  + ""
         }
     }).then(res => {
         if (res.ok) {
@@ -398,11 +398,11 @@ function getMaps() {
 }
 
 function getSetup() {
-    fetch(window.location.origin + ":" + window.location.port + "/current-setup", {
+    fetch(window.location.origin  + "/current-setup", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":" + window.location.port + ""
+            "Origin": window.location.origin  + ""
         }
     }).then(res => {
         if (res.ok) {
@@ -474,11 +474,11 @@ function closeUploadPage() {
 }
 
 function getMods() {
-    fetch(window.location.origin + ":" + window.location.port + "/mods", {
+    fetch(window.location.origin  + "/mods", {
         method: "GET",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":" + window.location.port + ""
+            "Origin": window.location.origin  + ""
         }
     }).then(res => {
         if (res.ok) {
@@ -569,11 +569,11 @@ function changeMods() {
         disabled: deactivated
     }
 
-    fetch(window.location.origin + ":" + window.location.port + "/change-mods", {
+    fetch(window.location.origin  + "/change-mods", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":" + window.location.port + ""
+            "Origin": window.location.origin  + ""
         },
         body: JSON.stringify(d)
     }).then(res => {
