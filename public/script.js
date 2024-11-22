@@ -186,7 +186,7 @@ function restart() {
         maxCars: document.getElementById("cars").value
     }
 
-    fetch(window.location.origin + ":" + window.location.port + "/beam/update-settings", {
+    fetch(window.location.origin + ":" + window.location.port + "/update-settings", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -263,7 +263,7 @@ async function upload() {
                 document.getElementById("yup").style.display = "block";
             }, 60000);
 
-            const response = await fetch(window.location.origin + ":" + window.location.port + "/beam/upload-mod", {
+            const response = await fetch(window.location.origin + ":" + window.location.port + "/upload-mod", {
                 method: 'POST',
                 body: formData,
             });
@@ -320,7 +320,7 @@ function offline() {
 // Fetch the static file content
 async function loadFile() {
     try {
-        const response = await fetch(window.origin + '/beam/current-map'); // Fetch the file
+        const response = await fetch(window.origin + '/current-map'); // Fetch the file
         if (!response.ok) throw new Error('File not found');
       
         const content = await response.text(); // Read the file content as text
@@ -337,7 +337,7 @@ async function loadFile() {
 loadFile();
 
 function getData() {
-	fetch(window.location.origin + ":" + window.location.port + "/beam/get-player-position", {
+	fetch(window.location.origin + ":" + window.location.port + "/get-player-position", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -363,7 +363,7 @@ function getData() {
 }
 
 function getMaps() {
-    fetch(window.location.origin + ":" + window.location.port + "/beam/maps", {
+    fetch(window.location.origin + ":" + window.location.port + "/maps", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -398,7 +398,7 @@ function getMaps() {
 }
 
 function getSetup() {
-    fetch(window.location.origin + ":" + window.location.port + "/beam/current-setup", {
+    fetch(window.location.origin + ":" + window.location.port + "/current-setup", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -474,7 +474,7 @@ function closeUploadPage() {
 }
 
 function getMods() {
-    fetch(window.location.origin + ":" + window.location.port + "/beam/mods", {
+    fetch(window.location.origin + ":" + window.location.port + "/mods", {
         method: "GET",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -569,7 +569,7 @@ function changeMods() {
         disabled: deactivated
     }
 
-    fetch(window.location.origin + ":" + window.location.port + "/beam/change-mods", {
+    fetch(window.location.origin + ":" + window.location.port + "/change-mods", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
