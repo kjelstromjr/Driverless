@@ -32,18 +32,18 @@ Linux:
   sudo apt install lua-json
 ```
 
-3. Install BeamMP to the new Driverless directory using their [installation guide](https://docs.beammp.com/server/create-a-server/). If you are installing on a system using the command line, I would recommend using `wget` to download the server file. For example:
+4. Install BeamMP to the new Driverless directory using their [installation guide](https://docs.beammp.com/server/create-a-server/). If you are installing on a system using the command line, I would recommend using `wget` to download the server file. For example:
 ```bash
   wget https://github.com/BeamMP/BeamMP-Server/releases/download/v3.4.1/BeamMP-Server.ubuntu.22.04.x86_64
 ```
 
-4. Create a new directory `DriverlessPlugin` in `Resources/Server`
+5. Create a new directory `DriverlessPlugin` in `Resources/Server`
 
-5. Create a new directory `Disabled` in `Resources`
+6. Create a new directory `Disabled` in `Resources`
 
-6. Move the Driverless plugin `Driverless.lua` from `Driverless/plugins/` to `Driverless/Resources/Server/DriverlessPlugin/`
+7. Move the Driverless plugin `Driverless.lua` from `Driverless/plugins/` to `Driverless/Resources/Server/DriverlessPlugin/`
 
-7. Run in `/Driverless`
+8. Run in `/Driverless`
 ```bash
   npm install
 ```
