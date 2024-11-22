@@ -72,7 +72,7 @@ Your chosen port, as well as port 30814 for BeamMP, need to be port forwarded on
 DISCLAIMER:
 By port forwarding, you understand the risks associated with opening ports on your network and void the right to hold the creators of Driverless and BeamMP accoutable for any negative consequences that result.
 
-You can now access your server using your ip address like so:
+You can now access your server using your ip address by entering into your web browser:
 
 `http://my.ip.address` or `http://my.ip.address:port`
 
