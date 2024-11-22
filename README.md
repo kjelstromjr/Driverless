@@ -8,11 +8,6 @@ Driverless features a live map of the server showing the current postions of all
 
 ## Installation 
 
-Windows:
-
-Windows:  
-[NodeJS prebuilt installer](https://nodejs.org/en/download/prebuilt-installer)  
-
 Linux:
 
 1. Install NodeJS  
@@ -48,11 +43,6 @@ Linux:
 ```
 ## Starting Server
 Run the server with the command:
-
-Windows:
-```bash
-  node main.js
-```
 
 Linux:
 ```bash
