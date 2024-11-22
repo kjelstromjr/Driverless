@@ -8,6 +8,9 @@ Driverless features a live map of the server showing the current postions of all
 
 ## Installation 
 
+Windows:  
+This project does not yet natively support running on windows, however I would recommend installing Ubuntu for Windows from the Microsoft Store and using the linux installation guide below
+
 Linux:
 
 1. Install NodeJS  
@@ -29,7 +32,10 @@ Linux:
   sudo apt install lua-json
 ```
 
-3. Install BeamMP to the new Driverless directory using their [installation guide](https://docs.beammp.com/server/create-a-server/)
+3. Install BeamMP to the new Driverless directory using their [installation guide](https://docs.beammp.com/server/create-a-server/). If you are installing on a system using the command line, I would recommend using `wget` to download the server file. For example:
+```bash
+  wget https://github.com/BeamMP/BeamMP-Server/releases/download/v3.4.1/BeamMP-Server.ubuntu.22.04.x86_64
+```
 
 4. Create a new directory `DriverlessPlugin` in `Resources/Server`
 
@@ -43,6 +49,11 @@ Linux:
 ```
 ## Starting Server
 Run the server with the command:
+
+Windows:
+```bash
+  node main.js
+```
 
 Linux:
 ```bash
