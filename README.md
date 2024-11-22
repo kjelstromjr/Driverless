@@ -9,7 +9,7 @@ Driverless features a live map of the server showing the current postions of all
 ## Installation 
 
 Windows:  
-This project does not yet natively support running on windows, however I would recommend installing Ubuntu for Windows from the Microsoft Store and use the linux installation guide below
+This project does not yet natively support running on Windows, however I would recommend installing Ubuntu for Windows from the Microsoft Store and use the linux installation guide below
 
 Linux:
 
