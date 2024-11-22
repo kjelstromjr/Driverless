@@ -9,7 +9,7 @@ Driverless features a live map of the server showing the current postions of all
 ## Installation 
 
 Windows:  
-This project does not yet natively support running on windows, however I would recommend installing Ubuntu for Windows from the Microsoft Store and using the linux installation guide below
+This project does not yet natively support running on Windows, however I would recommend installing Ubuntu for Windows from the Microsoft Store and use the linux installation guide below
 
 Linux:
 
@@ -50,14 +50,29 @@ Linux:
 ## Starting Server
 Run the server with the command:
 
-Windows:
-```bash
-  node main.js
-```
-
-Linux:
 ```bash
   sudo node main.js
 ```
 
 The webpage can now be accessed at localhost:3000
+## Maintainance
+
+#### Updates:
+Changes to the code of this project can simply be downloaded onto your system using `git pull`
+
+Any updates to the BeamMP server file needs to be manually redownloaded from the offical [BeamMP Github](https://github.com/BeamMP/BeamMP-Server/releases/)
+
+#### Going Public:
+Making your server's webpage public is very simple. First, go into `main.js` and change the `PORT` variable on line 11 to the port you would like to use.  
+
+If you are new to web hosting, port 80 is for HTTP, and is used by all websites on the internet. Please note that HTTP is not secure and should be use with caution. You can also use any other, non-reserved ports for your site.
+
+Your chosen port, as well as port 30814 for BeamMP, need to be port forwarded on your network.
+
+DISCLAIMER:
+By port forwarding, you understand the risks associated with opening ports on your network and void the right to hold the creators of Driverless and BeamMP accoutable for any negative consequences that result.
+
+You can now access your server using your ip address by entering into your web browser:
+
+`http://my.ip.address` or `http://my.ip.address:port`
+
