@@ -8,12 +8,15 @@ Driverless features a live map of the server showing the current postions of all
 
 ## Installation 
 
-1. Install NodeJS  
+Windows:
 
 Windows:  
 [NodeJS prebuilt installer](https://nodejs.org/en/download/prebuilt-installer)  
 
 Linux:
+
+1. Install NodeJS  
+
 ```bash
   sudo apt install nodejs
 ```
@@ -23,6 +26,14 @@ Linux:
 ```bash
   git clone https://github.com/kjelstromjr/Driverless.git
 ```
+
+3. Install lua and some dependencies
+```bash
+  sudo apt install liblua5.3-dev
+  sudo apt install lua-socket
+  sudo apt install lua-json
+```
+
 3. Install BeamMP to the new Driverless directory using their [installation guide](https://docs.beammp.com/server/create-a-server/)
 
 4. Create a new directory `DriverlessPlugin` in `Resources/Server`
