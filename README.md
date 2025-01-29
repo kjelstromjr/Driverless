@@ -13,23 +13,27 @@ This project does not yet natively support running on Windows, however I would r
 
 Linux:
 
-1. Install NodeJS  
+1. Install NodeJS and npm
 
 ```bash
   sudo apt install nodejs
 ```
+```bash
+  sudo apt install npm
+```
 
-2. Install Diverless with git
+2. Install lua and some dependencies
+```bash
+  sudo apt install liblua5.3-dev
+```
+```bash
+  sudo apt install lua-json
+```
+
+3. Install Diverless with git
 
 ```bash
   git clone https://github.com/kjelstromjr/Driverless.git
-```
-
-3. Install lua and some dependencies
-```bash
-  sudo apt install liblua5.3-dev
-  sudo apt install lua-socket
-  sudo apt install lua-json
 ```
 
 4. Install BeamMP to the new Driverless directory using their [installation guide](https://docs.beammp.com/server/create-a-server/). If you are installing on a system using the command line, I would recommend using `wget` to download the server file. For example:
