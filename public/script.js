@@ -220,7 +220,7 @@ function restart() {
         maxCars: document.getElementById("cars").value
     }
 
-    fetch(window.location.origin + ":443/beam/update-settings", {
+    fetch(window.location.origin + ":443/update-settings", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -306,7 +306,7 @@ async function upload() {
                 document.getElementById("uploadMessage").textContent = uploadingPhrases[Math.round(Math.random() * (uploadingPhrases.length - 1))] + "...";
             }, 10000);
 
-            const response = await fetch(window.location.origin + ":443/beam/upload-mod", {
+            const response = await fetch(window.location.origin + ":443/upload-mod", {
                 method: 'POST',
                 body: formData,
             });
@@ -365,7 +365,7 @@ function offline() {
 // Fetch the static file content
 async function loadFile() {
     try {
-        const response = await fetch(window.origin + '/beam/current-map'); // Fetch the file
+        const response = await fetch(window.origin + '/current-map'); // Fetch the file
         if (!response.ok) throw new Error('File not found');
       
         const content = await response.text(); // Read the file content as text
@@ -382,7 +382,7 @@ async function loadFile() {
 loadFile();
 
 function getData() {
-	fetch(window.location.origin + ":443/beam/get-player-position", {
+	fetch(window.location.origin + ":443/get-player-position", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -420,7 +420,7 @@ function getData() {
 }
 
 function getMaps() {
-    fetch(window.location.origin + ":443/beam/maps", {
+    fetch(window.location.origin + ":443/maps", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -455,7 +455,7 @@ function getMaps() {
 }
 
 function getSetup() {
-    fetch(window.location.origin + ":443/beam/current-setup", {
+    fetch(window.location.origin + ":443/current-setup", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -531,7 +531,7 @@ function closeUploadPage() {
 }
 
 function getMods() {
-    fetch(window.location.origin + ":443/beam/mods", {
+    fetch(window.location.origin + ":443/mods", {
         method: "GET",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -626,7 +626,7 @@ function changeMods() {
         disabled: deactivated
     }
 
-    fetch(window.location.origin + ":443/beam/change-mods", {
+    fetch(window.location.origin + ":443/change-mods", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
