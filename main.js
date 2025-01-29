@@ -20,6 +20,8 @@ let currentMap = "";
 
 let exit = false;
 
+let version = 1;
+
 const { spawn } = require('child_process');
 
 let beamProcess = spawn('sudo', ['./BeamMP-Server.ubuntu.22.04.x86_64']);
@@ -109,7 +111,7 @@ app.post('/player-position', bodyParser.json(), (req, res) => {
 });
 
 app.post("/get-player-position", (req, res) => {
-    res.json({playerData: playerData});
+    res.json({playerData: playerData, version: version});
     res.status(200).end();
 });
 
@@ -197,6 +199,7 @@ app.post("/update-settings", (req, res) => {
                 console.error("Error starting BeamMP process:", error);
             });
 
+            version++;
         } catch (error) {
             console.error("Error in request handling:", error);
             return res.status(500).end();
@@ -264,6 +267,8 @@ app.post("/upload-mod", fileUpload(), (req, res) => {
             .catch(err => {
                 console.error(err);
             });
+
+        version++;
     });
 });
 

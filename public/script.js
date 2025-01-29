@@ -1,5 +1,5 @@
 const rootStyles = getComputedStyle(document.documentElement);
-const actionColor = rootStyles.getPropertyValue('--action').trim();
+let actionColor = rootStyles.getPropertyValue('--action').trim();
 
 let players = [];
 
@@ -17,6 +17,17 @@ let dataGetter;
 
 let activated = [];
 let deactivated = [];
+
+let restoreClicked = false;
+
+let wakeLock;
+let wakeLocked = true;
+
+let reloadOnUpdate = true;
+
+let version = 0;
+
+let uploadingPhrases = ["Accessing mainframe", "Downloading consciousness", "Uploading the virus", "Deactivating HAL", "Booting up JARVIS", "Loading program", "Transmitting coordinates", "Executing order 66", "Initiating launch sequence", "Reactor meltdown in T-minus", "Re-routing power", "Preparing for re-entry", "Activating override protocols", "Opening pod bay doors", "Scanning for threats", "Mapping the genome", "Rebuilding the system", "Launching the nukes", "Critical failure imminent", "Diverting all energy to engines", "Decrypting the files", "Bypassing encryption", "Uploading ghost protocol", "Syncing data stream", "Rebuilding neural pathways", "Activating autonomous protocols", "Running diagnostics", "Engaging stealth mode", "AI directive in progress", "Aligning trajectory", "Initiating hyperspace jump", "Docking sequence initiated", "Launching the drone", "Flooding the core chamber"];
 
 class Line {
     constructor(x1, y1, x2, y2, color) {
@@ -53,10 +64,19 @@ class Player {
         this.x = x;
         this.y = y;
         this.name = name;
+        this.width = 0;
+        this.height = 0;
+        this.sx = 0;
+        this.sy = 0;
+        this.wasClicked = false;
     }
 
     update() {
-
+        if (this.wasClicked) {
+            //console.log("move");
+            fx = this.x + 500;
+            fy = this.y + 500;
+        }
     }
 
     draw() {
@@ -91,7 +111,13 @@ class Player {
         
         let [bx, by] = worldToScreen(this.x - (boxWidth / 2) / scale, this.y + (boxHeight + 7.071) / scale);
 
+        this.sx = bx;
+        this.sy = by;
+
         ctx.fillRect(bx, by, boxWidth, boxHeight);
+
+        this.width = boxWidth;
+        this.height = boxHeight;
 
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
@@ -108,6 +134,13 @@ class Player {
 
     setY(y) {
         this.y = y;
+    }
+
+    clicked() {
+        if (mouseX > this.sx && mouseY < this.sx + this.width && mouseY > this.sy && mouseY < this.sy + this.height) {
+            //console.log("clicked");
+            this.wasClicked = true;
+        }
     }
 }
 
@@ -161,6 +194,7 @@ function closePopups() {
     document.getElementById("offline").style.display = "none";
     document.getElementById("restarting").style.display = "none";
     document.getElementById("upload-popup").style.display = "none";
+    document.getElementById("settings-popup").style.display = "none";
 
     displayOpen = false;
 }
@@ -186,11 +220,11 @@ function restart() {
         maxCars: document.getElementById("cars").value
     }
 
-    fetch(window.location.origin  + "/update-settings", {
+    fetch(window.location.origin + ":443/beam/update-settings", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin  + ""
+            "Origin": window.location.origin + ":443"
         },
         body: JSON.stringify(data)
     }).then(res => {
@@ -205,9 +239,9 @@ function restart() {
         err("An Error Occurred While Loading Data");
     });
 
-    window.setTimeout(() => {
-        window.location.reload();
-    }, 5000);
+    // window.setTimeout(() => {
+    //     window.location.reload();
+    // }, 1000);
 }
 
 function restarting() {
@@ -222,6 +256,11 @@ function restarting() {
 function openMods() {
     displayOpen = true;
     document.getElementById("upload-popup").style.display = "flex";
+}
+
+function openSettings() {
+    displayOpen = true;
+    document.getElementById("settings-popup").style.display = "flex";
 }
 
 async function upload() {
@@ -252,18 +291,22 @@ async function upload() {
                 <div class="dot"></div>
                 <div class="dot"></div>
             </div>
-            <h3>Uploading files...</h3>
+            <h3 id="uploadMessage">Uploading files...</h3>
             <span id="yup" style="display: none">Yup, still going</span>`;
 
         const formData = new FormData();
         formData.append('file', file);
 
         try {
-            window.setTimeout(() => {
-                document.getElementById("yup").style.display = "block";
-            }, 60000);
+            // window.setTimeout(() => {
+            //     document.getElementById("yup").style.display = "block";
+            // }, 60000);
 
-            const response = await fetch(window.location.origin  + "/upload-mod", {
+            window.setInterval(() => {
+                document.getElementById("uploadMessage").textContent = uploadingPhrases[Math.round(Math.random() * (uploadingPhrases.length - 1))] + "...";
+            }, 10000);
+
+            const response = await fetch(window.location.origin + ":443/beam/upload-mod", {
                 method: 'POST',
                 body: formData,
             });
@@ -295,13 +338,15 @@ async function upload() {
             console.log(result);
         } catch (error) {
             console.error('Error uploading file:', error);
-            document.getElementById("upload-content").innerHTML = `
+            if (!debug) {
+                document.getElementById("upload-content").innerHTML = `
                 <div class="close" onclick="closePopups()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                     </svg>
                 </div>
                 <h1>Upload Failed</h1>`;
+            }
         }
     } else {
         err("No File Selected");
@@ -320,7 +365,7 @@ function offline() {
 // Fetch the static file content
 async function loadFile() {
     try {
-        const response = await fetch(window.origin + '/current-map'); // Fetch the file
+        const response = await fetch(window.origin + '/beam/current-map'); // Fetch the file
         if (!response.ok) throw new Error('File not found');
       
         const content = await response.text(); // Read the file content as text
@@ -337,11 +382,11 @@ async function loadFile() {
 loadFile();
 
 function getData() {
-	fetch(window.location.origin  + "/get-player-position", {
+	fetch(window.location.origin + ":443/beam/get-player-position", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin  + ""
+            "Origin": window.location.origin + ":443"
         }
     }).then(res => {
         clearPlayers();
@@ -356,6 +401,18 @@ function getData() {
         }
     }).then(json => {
 		playerData = json.playerData;
+        if (json.version !== version) {
+            if (version < 1) {
+                version = json.version;
+                //document.getElementById("players-online").style.display = "none";
+                //document.getElementById("mods").style.display = "none";
+                //document.getElementById("server")
+            } else {
+                if (reloadOnUpdate) {
+                    window.location.reload();
+                }
+            }
+        }
     }).catch(err => {
         console.error(err);
         err("An Error Occurred While Loading Data");
@@ -363,11 +420,11 @@ function getData() {
 }
 
 function getMaps() {
-    fetch(window.location.origin  + "/maps", {
+    fetch(window.location.origin + ":443/beam/maps", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin  + ""
+            "Origin": window.location.origin + ":443"
         }
     }).then(res => {
         if (res.ok) {
@@ -398,11 +455,11 @@ function getMaps() {
 }
 
 function getSetup() {
-    fetch(window.location.origin  + "/current-setup", {
+    fetch(window.location.origin + ":443/beam/current-setup", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin  + ""
+            "Origin": window.location.origin + ":443"
         }
     }).then(res => {
         if (res.ok) {
@@ -474,11 +531,11 @@ function closeUploadPage() {
 }
 
 function getMods() {
-    fetch(window.location.origin  + "/mods", {
+    fetch(window.location.origin + ":443/beam/mods", {
         method: "GET",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin  + ""
+            "Origin": window.location.origin + ":443"
         }
     }).then(res => {
         if (res.ok) {
@@ -495,7 +552,7 @@ function getMods() {
         for (let i = 0; i < active.length; i++) {
             let mod = active[i];
             let name = mod.substring(0, mod.length - 4);
-            html += `<div class="mod body3">
+            html += `<div class="option body3">
                         <span>${name}</span>
                         <label class="switch" onmouseup="updateMods(this, event)">
                             <input type="checkbox" name="${name}" id="${name}" checked>
@@ -507,7 +564,7 @@ function getMods() {
         for (let i = 0; i < disabled.length; i++) {
             let mod = disabled[i];
             let name = mod.substring(0, mod.length - 4);
-            html += `<div class="mod body3">
+            html += `<div class="option body3">
                         <span>${name}</span>
                         <label class="switch" onmouseup="updateMods(this, event)">
                             <input type="checkbox" name="${name}" id="${name}">
@@ -569,11 +626,11 @@ function changeMods() {
         disabled: deactivated
     }
 
-    fetch(window.location.origin  + "/change-mods", {
+    fetch(window.location.origin + ":443/beam/change-mods", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin  + ""
+            "Origin": window.location.origin + ":443"
         },
         body: JSON.stringify(d)
     }).then(res => {
@@ -601,6 +658,87 @@ function changeMods() {
     });
 }
 
+function changeColor() {
+    let color = document.getElementById("color").value;
+
+    document.documentElement.style.setProperty("--action", color);
+    document.documentElement.style.setProperty("--action-hover", decreaseHexColor(color, 10, 10, 54));
+    actionColor = color;
+
+    localStorage.setItem("color", color);
+}
+
+function decreaseHexColor(hex, amountR, amountG, amountB) {
+    // Ensure the hex string starts with '#' and is 6 or 3 characters long
+    if (!/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hex)) {
+      throw new Error("Invalid hex color format");
+    }
+  
+    // Expand shorthand hex to full hex if necessary (e.g., #abc -> #aabbcc)
+    if (hex.length === 4) {
+      hex = '#' + hex[1].repeat(2) + hex[2].repeat(2) + hex[3].repeat(2);
+    }
+  
+    // Extract the R, G, and B components
+    let r = parseInt(hex.slice(1, 3), 16);
+    let g = parseInt(hex.slice(3, 5), 16);
+    let b = parseInt(hex.slice(5, 7), 16);
+  
+    // Decrease each component and clamp the values between 0 and 255
+    r = Math.max(0, r - amountR);
+    g = Math.max(0, g - amountG);
+    b = Math.max(0, b - amountB);
+  
+    // Convert back to a hex string and pad with zeros if needed
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  }
+
+function restore() {
+    if (!restoreClicked) {
+        restoreClicked = true;
+        document.getElementById("restoreButton").classList = "stopbutton";
+        document.getElementById("restoreButton").textContent = "Are you sure?";
+        let timer = window.setTimeout(() => {
+            restoreClicked = false;
+            document.getElementById("restoreButton").classList = "defaultbutton";
+            document.getElementById("restoreButton").textContent = "Restore Default Settings";
+        }, 5000);
+    } else {
+        restoreClicked = false;
+        document.getElementById("restoreButton").classList = "defaultbutton";
+        document.getElementById("restoreButton").textContent = "Restore Default Settings";
+
+        document.getElementById("color").value = "#3131e3";
+        changeColor();
+
+        document.getElementById("sleep").checked = true;
+        localStorage.setItem("sleep", true);
+    }
+}
+
+function changeSleep() {
+    if (wakeLocked) {
+        wakeLock.release();
+        wakeLock = null;
+        localStorage.setItem("sleep", false);
+        wakeLocked = false;
+    } else {
+        requestWakeLock();
+        wakeLocked = true;
+        localStorage.setItem("sleep", true);
+    }
+}
+
+function changeReload() {
+    if (reloadOnUpdate) {
+        reloadOnUpdate = false;
+    } else {
+        reloadOnUpdate = true;
+    }
+
+    localStorage.setItem("reloadOnUpdate", reloadOnUpdate);
+}
+
 function err(thing) {
     let m = document.getElementById("message");
     if (m.innerHTML !== `<div style="color: darkred;background-color: rgb(255, 125, 125);">${thing}</div>`) {
@@ -625,4 +763,43 @@ if (!debug) {
     dataGetter = window.setInterval(() => {
         getData();
     }, 100);
+}
+
+if (localStorage.getItem("color") === null) {
+    document.getElementById("color").value = "#3131e3";
+} else {
+    document.getElementById("color").value = localStorage.getItem("color");
+    actionColor = localStorage.getItem("color");
+    document.documentElement.style.setProperty("--action-hover", decreaseHexColor(localStorage.getItem("color"), 10, 10, 54));
+}
+
+async function requestWakeLock() {
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+  } catch (err) {
+    console.error(`${err.name}: ${err.message}`);
+  }
+}
+
+// Re-request wake lock when the page becomes visible again
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    requestWakeLock();
+  }
+});
+
+if (localStorage.getItem("sleep") === "true" || localStorage.getItem("sleep") === null) {
+    wakeLocked = true;
+    requestWakeLock();
+} else {
+    document.getElementById("sleep").checked = false;
+    wakeLocked = false;
+}
+
+if (localStorage.getItem("reloadOnUpdate") === "true" || localStorage.getItem("reloadOnUpdate") === null) {
+    reloadOnUpdate = true;
+    requestWakeLock();
+} else {
+    document.getElementById("reloadOnUpdate").checked = false;
+    reloadOnUpdate = false;
 }

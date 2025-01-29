@@ -6,6 +6,9 @@
     <title>Beamng.drive server</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="grid.css">
+    <script>
+        document.documentElement.style.setProperty("--action", localStorage.getItem("color"));
+    </script>
 </head>
 <body>
     <div id="message"></div>
@@ -71,7 +74,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
                         <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z"/>
                     </svg>
-                    <span>Upload files</span>
+                    <span>Upload Files</span>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -81,6 +84,65 @@
             <span class="listHeader">Installed Mods</span>
 
             <button id="modsUpdateBtn" class="actionbutton" onclick="changeMods()" disabled>Update</button>
+
+            <!-- <div class="option body3">
+                <span>BMW_M6_F13_bm</span>
+                <label class="switch" onmouseup="updateMods(this, event)">
+                    <input type="checkbox" name="BMW_M6_F13_bm" id="BMW_M6_F13_bm" checked="">
+                    <div class="slider"></div>
+                </label>
+            </div>
+
+            <div id="upload-page" class="page">
+                <div class="back-arrow" onclick="closeUploadPage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"></path>
+                    </svg>
+                </div>
+                <h1>Upload Mods</h1>
+                <div class="horizontalGrid">
+                    <input type="file" name="files" id="files" accept=".zip" multiple="">
+                </div>
+                <br><br>
+                <div class="horizontalGrid">
+                    <div class="actionbutton" onclick="upload()">Upload</div>
+                </div>
+            </div> -->
+
+        </div>
+    </div>
+
+    <div class="full-center" id="settings-popup">
+        <div class="popup body2 verticle-stack" id="upload-content">
+            <div class="close" onclick="closePopups()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                </svg>
+            </div>
+            <h1>Settings</h1>
+            
+            <div class="option body3">
+                <span>Main Color</span>
+                <input type="color" name="color" id="color" value="#3131e3" oninput="changeColor()">
+            </div>
+
+            <div class="option body3">
+                <span>Prevent Device From Sleeping</span>
+                <label class="switch" onmouseup="changeSleep()">
+                    <input type="checkbox" name="sleep" id="sleep" checked>
+                    <div class="slider"></div>
+                </label>
+            </div>
+
+            <div class="option body3">
+                <span>Reload On Server Change</span>
+                <label class="switch" onmouseup="changeReload()">
+                    <input type="checkbox" name="reloadOnUpdate" id="reloadOnUpdate" checked>
+                    <div class="slider"></div>
+                </label>
+            </div>
+
+            <button id="restoreButton" class="defaultbutton" onclick="restore()">Restore Default Settings</button>
 
             <!-- <div class="mod body3">
                 <span>car_jump_arena_free</span>
@@ -103,10 +165,17 @@
                         </svg>
                         <span id="players-online">0 / 8</span>
                     </div>
-                    <div id="mods" onclick="openMods()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plugin" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 1 2.898 5.673c-.167-.121-.216-.406-.002-.62l1.8-1.8a3.5 3.5 0 0 0 4.572-.328l1.414-1.415a.5.5 0 0 0 0-.707l-.707-.707 1.559-1.563a.5.5 0 1 0-.708-.706l-1.559 1.562-1.414-1.414 1.56-1.562a.5.5 0 1 0-.707-.706l-1.56 1.56-.707-.706a.5.5 0 0 0-.707 0L5.318 5.975a3.5 3.5 0 0 0-.328 4.571l-1.8 1.8c-.58.58-.62 1.6.121 2.137A8 8 0 1 0 0 8a.5.5 0 0 0 1 0"/>
-                        </svg>
+                    <div>
+                        <div id="settings" class="popupButton" onclick="openSettings()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-wide-connected" viewBox="0 0 16 16">
+                                <path d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5m0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78zM5.048 3.967l-.087.065zm-.431.355A4.98 4.98 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8zm.344 7.646.087.065z"/>
+                            </svg>
+                        </div>
+                        <div id="mods" class="popupButton" onclick="openMods()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plugin" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 1 2.898 5.673c-.167-.121-.216-.406-.002-.62l1.8-1.8a3.5 3.5 0 0 0 4.572-.328l1.414-1.415a.5.5 0 0 0 0-.707l-.707-.707 1.559-1.563a.5.5 0 1 0-.708-.706l-1.559 1.562-1.414-1.414 1.56-1.562a.5.5 0 1 0-.707-.706l-1.56 1.56-.707-.706a.5.5 0 0 0-.707 0L5.318 5.975a3.5 3.5 0 0 0-.328 4.571l-1.8 1.8c-.58.58-.62 1.6.121 2.137A8 8 0 1 0 0 8a.5.5 0 0 0 1 0"/>
+                            </svg>
+                        </div>
                     </div>
                     <!-- <div id="upload" onclick="openUpload()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">

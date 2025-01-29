@@ -6,6 +6,7 @@
     --text: white;
 
     --action: rgb(49 49 227);
+    --action-hover: rgb(39, 39, 173);
 
     --go: green;
     --stop: red;
@@ -138,7 +139,7 @@ body {
     width: 100%;
 }
 .actionbutton:hover {
-    background-color: rgb(39, 39, 173);
+    background-color: var(--action-hover);
 }
 .actionbutton:disabled {
     background-color: var(--body3);
@@ -212,7 +213,6 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
     max-height: 80%;
-    min-width: 200px;
 }
 ::-webkit-scrollbar {
     background-color: var(--body2);
@@ -253,7 +253,7 @@ body {
     display: none;
 }
 
-#mods {
+.popupButton {
     /* position: absolute;
     top: 10px;
     right: 10px; */
@@ -267,8 +267,9 @@ body {
     align-items: center;
     cursor: pointer;
     transition: background-color 0.1s linear;
+    margin: 5px;
 }
-#mods:hover {
+.popupButton:hover {
     background-color: hsl(0, 0%, 15%);
 }
 
@@ -299,7 +300,7 @@ input[type="file"]::-webkit-file-upload-button {
     cursor: pointer;
 }
 
-.mod {
+.option {
     padding: 10px;
     border-radius: 10px;
     transition: background-color 0.1s linear;
@@ -446,6 +447,14 @@ input[type="file"]::-webkit-file-upload-button {
     font-weight: bold;
     animation: word 1s ease-out;
     z-index: 998;
+}
+
+#color {
+    cursor: pointer;
+}
+
+#settings-popup {
+    display: none;
 }
 
 @keyframes word {
