@@ -13,10 +13,13 @@ This project does not yet natively support running on Windows, however I would r
 
 Linux:
 
-1. Install NodeJS  
+1. Install NodeJS and npm
 
 ```bash
   sudo apt install nodejs
+```
+```bash
+  sudo apt install npm
 ```
 
 2. Install Diverless with git
@@ -28,9 +31,6 @@ Linux:
 3. Install lua and some dependencies
 ```bash
   sudo apt install liblua5.3-dev
-```
-```bash
-  sudo apt install lua-socket
 ```
 ```bash
   sudo apt install lua-json
