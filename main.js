@@ -267,8 +267,6 @@ app.post("/upload-mod", fileUpload(), (req, res) => {
             .catch(err => {
                 console.error(err);
             });
-
-        version++;
     });
 });
 
