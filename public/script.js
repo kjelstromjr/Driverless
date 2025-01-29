@@ -7,7 +7,7 @@ let offlineDisplayed = false;
 
 let playerData = [];
 
-let debug = false;
+let debug = true;
 
 let currentMap = "";
 let maxPlayers = -1;
@@ -774,6 +774,10 @@ if (localStorage.getItem("color") === null) {
 }
 
 async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) {
+    return;
+  }
+
   try {
     wakeLock = await navigator.wakeLock.request('screen');
   } catch (err) {
@@ -788,17 +792,21 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-if (localStorage.getItem("sleep") === "true" || localStorage.getItem("sleep") === null) {
+if ((localStorage.getItem("sleep") === "true" || localStorage.getItem("sleep") === null) && ('wakeLock' in navigator)) {
+    document.getElementById("sleep").checked = true;
     wakeLocked = true;
     requestWakeLock();
+} else if (!('wakeLock' in navigator)) {
+    document.getElementById("sleep").disabled = true;
+    document.getElementById("sleep").checked = false;
 } else {
     document.getElementById("sleep").checked = false;
     wakeLocked = false;
 }
 
 if (localStorage.getItem("reloadOnUpdate") === "true" || localStorage.getItem("reloadOnUpdate") === null) {
+    document.getElementById("reloadOnUpdate").checked = true;
     reloadOnUpdate = true;
-    requestWakeLock();
 } else {
     document.getElementById("reloadOnUpdate").checked = false;
     reloadOnUpdate = false;
