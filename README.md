@@ -28,9 +28,14 @@ Linux:
 3. Install lua and some dependencies
 ```bash
   sudo apt install liblua5.3-dev
+```
+```bash
   sudo apt install lua-socket
+```
+```bash
   sudo apt install lua-json
 ```
+  
 
 4. Install BeamMP to the new Driverless directory using their [installation guide](https://docs.beammp.com/server/create-a-server/). If you are installing on a system using the command line, I would recommend using `wget` to download the server file. For example:
 ```bash
