@@ -213,6 +213,7 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
     max-height: 80%;
+    min-width: 200px;
 }
 ::-webkit-scrollbar {
     background-color: var(--body2);
