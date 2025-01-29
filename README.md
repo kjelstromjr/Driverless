@@ -27,6 +27,9 @@ Linux:
   sudo apt install liblua5.3-dev
 ```
 ```bash
+  sudo apt install lua-socket
+```
+```bash
   sudo apt install lua-json
 ```
 
