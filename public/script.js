@@ -7,7 +7,7 @@ let offlineDisplayed = false;
 
 let playerData = [];
 
-let debug = true;
+let debug = false;
 
 let currentMap = "";
 let maxPlayers = -1;
@@ -220,11 +220,11 @@ function restart() {
         maxCars: document.getElementById("cars").value
     }
 
-    fetch(window.location.origin + ":443/update-settings", {
+    fetch(window.location.origin + ":" + window.location.port + "/update-settings", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":443"
+            "Origin": window.location.origin + ":" + window.location.port + ""
         },
         body: JSON.stringify(data)
     }).then(res => {
@@ -306,7 +306,7 @@ async function upload() {
                 document.getElementById("uploadMessage").textContent = uploadingPhrases[Math.round(Math.random() * (uploadingPhrases.length - 1))] + "...";
             }, 10000);
 
-            const response = await fetch(window.location.origin + ":443/upload-mod", {
+            const response = await fetch(window.location.origin + ":" + window.location.port + "/upload-mod", {
                 method: 'POST',
                 body: formData,
             });
@@ -382,11 +382,11 @@ async function loadFile() {
 loadFile();
 
 function getData() {
-	fetch(window.location.origin + ":443/get-player-position", {
+	fetch(window.location.origin + ":" + window.location.port + "/get-player-position", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":443"
+            "Origin": window.location.origin + ":" + window.location.port + ""
         }
     }).then(res => {
         clearPlayers();
@@ -420,11 +420,11 @@ function getData() {
 }
 
 function getMaps() {
-    fetch(window.location.origin + ":443/maps", {
+    fetch(window.location.origin + ":" + window.location.port + "/maps", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":443"
+            "Origin": window.location.origin + ":" + window.location.port + ""
         }
     }).then(res => {
         if (res.ok) {
@@ -455,11 +455,11 @@ function getMaps() {
 }
 
 function getSetup() {
-    fetch(window.location.origin + ":443/current-setup", {
+    fetch(window.location.origin + ":" + window.location.port + "/current-setup", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":443"
+            "Origin": window.location.origin + ":" + window.location.port + ""
         }
     }).then(res => {
         if (res.ok) {
@@ -531,11 +531,11 @@ function closeUploadPage() {
 }
 
 function getMods() {
-    fetch(window.location.origin + ":443/mods", {
+    fetch(window.location.origin + ":" + window.location.port + "/mods", {
         method: "GET",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":443"
+            "Origin": window.location.origin + ":" + window.location.port + ""
         }
     }).then(res => {
         if (res.ok) {
@@ -626,11 +626,11 @@ function changeMods() {
         disabled: deactivated
     }
 
-    fetch(window.location.origin + ":443/change-mods", {
+    fetch(window.location.origin + ":" + window.location.port + "/change-mods", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8",
-            "Origin": window.location.origin + ":443"
+            "Origin": window.location.origin + ":" + window.location.port + ""
         },
         body: JSON.stringify(d)
     }).then(res => {
