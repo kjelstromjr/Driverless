@@ -151,7 +151,7 @@ int main(int argc, char const *argv[]) {
         cout << "Enter AuthKey provided by BeamMP: ";
         cin >> key;  // Reads input until the first space
         string line = "AuthKey = \"" + key + "\"";
-        editLineInFile("ServerConfig.toml", 28, line);
+        editLineInFile("ServerConfig.toml", 27, line);
     } catch (...) {
         cout << RED << "Unable to move plugin. Check to make sure the file is in plugins and the folder DriverlessPlugin is in Resources/Server" << RESET << endl;
         return 1;
