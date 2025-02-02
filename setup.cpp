@@ -153,7 +153,20 @@ int main(int argc, char const *argv[]) {
         string line = "AuthKey = \"" + key + "\"";
         editLineInFile("ServerConfig.toml", 27, line);
     } catch (...) {
-        cout << RED << "Unable to move plugin. Check to make sure the file is in plugins and the folder DriverlessPlugin is in Resources/Server" << RESET << endl;
+        cout << RED << "Unable to add AuthKey to ServerConfig.toml" << RESET << endl;
+        return 1;
+    }
+
+    // Changing Port
+    try {
+        string port;
+        cout << "Enter the port that you would like the server can run on (default 3000): ";
+        cin >> port;  // Reads input until the first space
+        //const PORT = 3000;
+        string line = "const PORT = " + port + ";";
+        editLineInFile("main.js", 9, line);
+    } catch (...) {
+        cout << RED << "Unable to change the port in main.js" << RESET << endl;
         return 1;
     }
 }
