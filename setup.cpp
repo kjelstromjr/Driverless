@@ -143,6 +143,15 @@ int main(int argc, char const *argv[]) {
         return 1;
     }
 
+    // Installing node.js packages
+    try {
+        cout << "Installing node.js packages..." << endl;
+        system("npm install");
+    } catch (...) {
+        cout << RED << "Unable to install node.js packages" << RESET << endl;
+        return 1;
+    }
+
     cout << endl;
 
     // Adding key
@@ -169,4 +178,9 @@ int main(int argc, char const *argv[]) {
         cout << RED << "Unable to change the port in main.js" << RESET << endl;
         return 1;
     }
+
+    cout << endl;
+
+    cout << "Installation complete!";
+    cout << "Run the server using \"sudo node main.js\"";
 }
