@@ -181,6 +181,6 @@ int main(int argc, char const *argv[]) {
 
     cout << endl;
 
-    cout << "Installation complete!";
-    cout << "Run the server using \"sudo node main.js\"";
+    cout << "Installation complete!" << endl;
+    cout << "Run the server using \"sudo node main.js\"" << endl;
 }
