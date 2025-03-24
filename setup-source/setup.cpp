@@ -169,6 +169,7 @@ int main(int argc, char const *argv[]) {
     // Changing Port
     string port;
     cout << "Enter the port that you would like the server to run on (default 3000): ";
+    cin.ignore();
     getline(cin, port);  // Read the entire input line
 
     if (port.empty()) {  // Check if the user just pressed Enter
