@@ -167,17 +167,16 @@ int main(int argc, char const *argv[]) {
     }
 
     // Changing Port
-    try {
-        string port = "3000";
-        cout << "Enter the port that you would like the server can run on (default 3000): ";
-        cin >> port;  // Reads input until the first space
-        //const PORT = 3000;
-        string line = "const PORT = " + port + ";";
-        editLineInFile("main.js", 9, line);
-    } catch (...) {
-        cout << RED << "Unable to change the port in main.js" << RESET << endl;
-        return 1;
+    string port;
+    cout << "Enter the port that you would like the server to run on (default 3000): ";
+    getline(cin, port);  // Read the entire input line
+
+    if (port.empty()) {  // Check if the user just pressed Enter
+        port = "3000";
     }
+
+    string line = "const PORT = " + port + ";";
+    editLineInFile("main.js", 9, line);
 
     cout << endl;
 
