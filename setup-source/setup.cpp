@@ -168,7 +168,7 @@ int main(int argc, char const *argv[]) {
 
     // Changing Port
     try {
-        string port;
+        string port = "3000";
         cout << "Enter the port that you would like the server can run on (default 3000): ";
         cin >> port;  // Reads input until the first space
         //const PORT = 3000;
