@@ -57,7 +57,7 @@ If you are new to web hosting, port 80 is for HTTP, and is used by all websites 
 Your chosen port, as well as port 30814 for BeamMP, need to be port forwarded on your network.
 
 DISCLAIMER:
-By port forwarding, you understand the risks associated with opening ports on your network and void the right to hold the creators of Driverless and BeamMP accoutable for any negative consequences that result.
+By port forwarding, you understand the risks associated with opening ports on your network and void the right to hold the creators of Driverless and BeamMP accountable for any negative consequences that result.
 
 You can now access your server using your ip address by entering into your web browser:
 
