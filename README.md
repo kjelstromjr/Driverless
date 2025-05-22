@@ -11,7 +11,7 @@ Driverless features a live map of the server showing the current postions of all
 Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.com/server/create-a-server/) for more information on running a server.
 
 Windows:  
-This project does not yet natively support running on Windows, however I would recommend installing Ubuntu for Windows from the Microsoft Store and use the linux installation guide below
+This project does not yet natively support running on Windows, however you can run it via **WSL (Ubuntu on Windows)**
 
 Linux:
 
