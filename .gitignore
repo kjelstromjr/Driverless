@@ -1,0 +1,14 @@
+# Node.js dependencies
+node_modules/
+
+mods.json
+
+Server.log
+
+Server.old.log
+
+*.toml
+
+BeamMP-Server*
+
+Resources/
