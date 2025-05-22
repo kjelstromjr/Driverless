@@ -7,7 +7,7 @@ const fileUpload = require('express-fileupload');
 const yauzl = require('yauzl');
 const AdmZip = require('adm-zip');
 const app = express();
-const PORT = 3000;
+const PORT = 80;
 
 let playerData = [];
 
@@ -24,18 +24,9 @@ let version = 1;
 
 const { spawn } = require('child_process');
 
-let beamProcess = spawn('sudo', ['./BeamMP-Server.ubuntu.22.04.x86_64']);
-
-beamProcess.stdout.on('data', (data) => {
-  console.log(`${data}`);
+let beamProcess = spawn('sudo', ['./BeamMP-Server.ubuntu.22.04.x86_64'], {
+    stdio: 'inherit'
 });
-
-beamProcess.stderr.on('data', (data) => {
-  console.error(`Error: ${data}`);
-});
-
-// app.use(bodyParser.json());
-// app.use(fileUpload());
 
 let serverConfig = fs.readFileSync("./ServerConfig.toml", "utf8");
 
@@ -105,7 +96,6 @@ app.get('/', (req, res) => {
 // Endpoint to receive player position data
 app.post('/player-position', bodyParser.json(), (req, res) => {
     const { points } = req.body;
-    //console.log(`Points: ${JSON.stringify(points)}`);
     playerData = points;
     res.status(200).send('Position received');
 });
@@ -190,16 +180,18 @@ app.post("/update-settings", (req, res) => {
             maxPlayers = players;
             maxCars = cars;
 
-            beamProcess.on("spawn", () => {
-                //console.log("Response sent to client");
-                return res.status(200).end();
-            });
+            // beamProcess.on("spawn", () => {
+            //     console.log("Response sent to client");
+            //     return res.status(200).end();
+            // });
 
             beamProcess.on("error", (error) => {
                 console.error("Error starting BeamMP process:", error);
             });
 
             version++;
+
+            res.status(200).end();
         } catch (error) {
             console.error("Error in request handling:", error);
             return res.status(500).end();
