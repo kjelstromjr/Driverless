@@ -31,7 +31,9 @@ You may need to run the following to add execution privilages to the program
 chmod +x setup
 ```
 
+
 Windows and other Linux flavors:  
+
 This project is mainly built for running on Ubuntu, however you can get it running on other system with a few extra steps
 
 For Windows: I would recommend installing **WSL (Ubuntu on Windows)** and running the program with the step above for Ubuntu
