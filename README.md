@@ -10,7 +10,7 @@ Driverless features a live map of the server showing the current postions of all
 
 Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.com/server/create-a-server/) for more information on running a server.
 
-Linux (Ubuntu):
+**Linux (Ubuntu):**
 
 1. Install Diverless using git or download the latest release
 
@@ -31,8 +31,7 @@ You may need to run the following to add execution privilages to the program
 chmod +x setup
 ```
 
-
-Windows and other Linux flavors:  
+**Windows and other Linux flavors:** 
 
 This project is mainly built for running on Ubuntu, however you can get it running on other system with a few extra steps
 
