@@ -10,10 +10,7 @@ Driverless features a live map of the server showing the current postions of all
 
 Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.com/server/create-a-server/) for more information on running a server.
 
-Windows:  
-This project does not yet natively support running on Windows, however you can run it via **WSL (Ubuntu on Windows)**
-
-Linux:
+Linux (Ubuntu):
 
 1. Install Diverless using git or download the latest release
 
@@ -33,6 +30,54 @@ You may need to run the following to add execution privilages to the program
 ```bash
 chmod +x setup
 ```
+
+Windows and other Linux flavors:  
+This project is mainly built for running on Ubuntu, however you can get it running on other system with a few extra steps
+
+For Windows: I would recommend installing **WSL (Ubuntu on Windows)** and running the program with the step above for Ubuntu
+
+Here are the installation steps:
+
+1. Install Diverless using git or download the latest release
+
+```bash
+git clone https://github.com/kjelstromjr/Driverless.git
+```
+
+2. Install all of the dependencies
+
+ - Node.js
+ - npm
+ - Lua
+   - Recommend version 5.3 dev
+   - For Linux: ```sudo apt install liblua5.3-dev```
+ - lua-socket
+   - For Linux: ```sudo apt install lua-socket```
+ - lua-json
+   - For Linux: ```sudo apt install lua-json``` 
+
+3. Install Node.js modules
+
+```bash
+npm install
+```
+
+4. Download the correct [beamMP](https://beammp.com/) server executable and put it in the Driverless folder
+
+5. Create the following folders and subfolders in the Driverless folder:
+
+ - Resources
+   - Server
+     - DriverlessPlugin
+   - Disabled
+
+6. Move the lua file in the plugins folder to the Resources/Server/DriverlessPlugin folder
+
+7. Inside of the ServerConfig.toml file, there is a line that says ```AuthKey = ""```. Go to [Keymaster](https://beammp.com/keymaster) and generate a key, then place the key inside of the quotations and save the file
+
+8. If you would like to change the port the server is run on (default 80), change the value on line 10 of main.js
+
+9. All done!
 
 ## Starting Server
 Run the server with the command:
