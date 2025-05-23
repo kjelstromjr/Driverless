@@ -33,12 +33,12 @@ chmod +x setup
 
 **Windows and other Linux flavors:** 
 
-This project is mainly built for running on Ubuntu, however you can get it running on other system with a few extra steps
+This project is mainly built for running on Ubuntu, however you can get it running on other system with a few extra steps. The only thing that won't work is the processing of custom map to display live.
 
 For Windows: I would recommend installing **WSL (Ubuntu on Windows)** and running the program with the step above for Ubuntu
 
 Here are the installation steps:
-
+ 
 1. Install Diverless using git or download the latest release
 
 ```bash
