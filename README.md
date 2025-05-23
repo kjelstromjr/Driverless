@@ -78,7 +78,9 @@ npm install
 
 8. If you would like to change the port the server is run on (default 80), change the value on line 10 of main.js
 
-9. All done!
+9. On line 27 of main.js, change where it says ```'./BeamMP-Server.ubuntu.22.04.x86_64'``` to whatever the name of the executable you downloaded for beamMP is. Make sure to keep the "./" at the beginning of the name. For Windows users, make sure to include the .exe after the name
+
+10. All done! You may need to run the BeamMP executable once alone to get additional things set up.
 
 ## Starting Server
 Run the server with the command:
