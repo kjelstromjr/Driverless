@@ -42,7 +42,7 @@ function sendPosition(points)
     -- print(points)
 
     local response, status = http.request({
-        url = "http://localhost:3000/player-position",  -- Node.js endpoint
+        url = "http://localhost:80/player-position",  -- Node.js endpoint
         method = "POST",
         headers = {
             ["Content-Type"] = "application/json",

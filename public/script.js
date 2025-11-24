@@ -7,7 +7,7 @@ let offlineDisplayed = false;
 
 let playerData = [];
 
-let debug = true;
+let debug = false;
 
 let currentMap = "";
 let maxPlayers = -1;

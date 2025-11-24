@@ -26,7 +26,7 @@ Debug = false
 # Add custom identifying tags to your server to make it easier to find. Format should be TagA,TagB,TagC. Note the comma seperation.
 Tags = "Freeroam"
 # AuthKey has to be filled out in order to run the server
-AuthKey = ""
+AuthKey = "4894d327-7585-4702-bdbd-16ac0dca73b7"
 MaxPlayers = 8
 Map = "/levels/gridmap_v2/info.json"
 

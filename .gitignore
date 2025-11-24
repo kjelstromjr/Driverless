@@ -2,8 +2,6 @@ test.js
 
 node_modules/
 
-mods.json
-
 Server.log
 
 Server.old.log
@@ -13,3 +11,5 @@ Server.old.log
 BeamMP-Server*
 
 Resources/
+
+.vscode

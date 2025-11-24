@@ -5,8 +5,9 @@ services:
     build: .
     container_name: driverless-server
     ports:
-      - "3000:3000"           # Web interface (adjust if you change PORT in main.js)
-      - "30814:30814"     # BeamMP server port
+      - "80:80"           # Web interface (adjust if you change PORT in main.js)
+      - "30814:30814/tcp"     # BeamMP server port
+      - "30814:30814/udp"     
     volumes:
       - ./Resources:/app/Resources  # Persist server data and mods
       - ./ServerConfig.toml:/app/ServerConfig.toml  # Persist configuration
