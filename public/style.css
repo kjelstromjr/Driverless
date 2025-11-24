@@ -393,6 +393,7 @@ input[type="file"]::-webkit-file-upload-button {
     top: 0px;
     left: 100%;
     transition: left 0.25s linear;
+    padding-left: 5px;
 }
 
 .page {

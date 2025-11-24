@@ -6,6 +6,7 @@ const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const yauzl = require('yauzl');
 const AdmZip = require('adm-zip');
+const path = require('path');
 const app = express();
 const PORT = 3000;
 
@@ -24,7 +25,7 @@ let version = 1;
 
 const { spawn } = require('child_process');
 
-let beamProcess = spawn('sudo', ['./BeamMP-Server.ubuntu.22.04.x86_64']);
+let beamProcess = spawn('./BeamMP-Server.ubuntu.22.04.x86_64');
 
 beamProcess.stdout.on('data', (data) => {
   console.log(`${data}`);
@@ -34,10 +35,59 @@ beamProcess.stderr.on('data', (data) => {
   console.error(`Error: ${data}`);
 });
 
+// Adjust these paths:
+const pluginDir = path.join(__dirname, "Resources/Server/DriverlessPlugin");
+const sourceFile = path.join(__dirname, "plugins/Driverless.lua");        // Where the file currently is
+const destFile = path.join(pluginDir, "Driverless.lua");           // Where it should end up
+
+function ensurePluginFile() {
+  // Create directory if missing
+  if (!fs.existsSync(pluginDir)) {
+    console.log("DriverlessPlugin directory missing — creating it...");
+    fs.mkdirSync(pluginDir, { recursive: true });
+  }
+
+  // If the file is already in the directory, stop
+  if (fs.existsSync(destFile)) {
+    console.log("Lua file already exists in DriverlessPlugin. Nothing to do.");
+    return;
+  }
+
+  // Ensure source file exists
+  if (!fs.existsSync(sourceFile)) {
+    console.error("Source Lua file does NOT exist. Cannot move.");
+    return;
+  }
+
+  // Move the file
+  try {
+    try {
+        fs.renameSync(sourceFile, destFile);    } catch (err) {
+        if (err.code === 'EXDEV') {
+            // Copy + unlink fallback
+            fs.copyFileSync(sourceFile, destFile);
+            fs.unlinkSync(sourceFile);
+        } else {
+            throw err;
+        }
+    }
+    console.log("Lua file moved successfully!");
+  } catch (err) {
+    console.error("Error moving file:", err);
+  }
+}
+
+ensurePluginFile();
+
 // app.use(bodyParser.json());
 // app.use(fileUpload());
 
 let serverConfig = fs.readFileSync("./ServerConfig.toml", "utf8");
+
+if (serverConfig === "") {
+    console.log("Failed to read ServerConfig.toml. Retrying...");
+    serverConfig = fs.readFileSync("./ServerConfig.toml", "utf8");
+}
 
 serverConfig = serverConfig.split("\n");
 
@@ -74,13 +124,28 @@ if (maxCars == -1) {
     exit = true;
 }
 
-if (!fs.existsSync("./mods.json")) {
-    fs.writeFileSync("./mods.json", `{"maps":[],"addons":[]}`, 'utf8');
+const modsJsonPath = path.join(__dirname, "mods.json");
+
+if (!fs.existsSync(modsJsonPath)) {
+    fs.writeFileSync(modsJsonPath, `{"maps":[],"addons":[]}`, 'utf8');
     console.log(`mods.json was created.`);
 }
 
-let modsData = JSON.parse(fs.readFileSync("./mods.json"));
+
+
+let modsData = fs.readFileSync(modsJsonPath, 'utf-8');
+if (!modsData || modsData.trim() === '') {
+    fs.writeFileSync(modsJsonPath, `{"maps":[],"addons":[]}`, 'utf8');
+    console.log(`mods.json was empty, initialized with defaults.`);
+}
+
+modsData = JSON.parse(fs.readFileSync(modsJsonPath, 'utf-8'));
+
 addedMaps = modsData.maps;
+
+if (!fs.existsSync('./Resources/Disabled')) {
+    fs.mkdirSync('./Resources/Disabled', { recursive: true });
+}
 
 fs.readdirSync("./Resources/Disabled", (err, files) => {
     if (err) {
@@ -185,18 +250,18 @@ app.post("/update-settings", (req, res) => {
 
             // Restart the BeamMP server process asynchronously
             console.log("Starting new process...");
-            beamProcess = spawn("sudo", ["./BeamMP-Server.ubuntu.22.04.x86_64"]);
+            beamProcess = spawn("./BeamMP-Server.ubuntu.22.04.x86_64");
             currentMap = map;
             maxPlayers = players;
             maxCars = cars;
 
-            beamProcess.on("spawn", () => {
-                //console.log("Response sent to client");
+            beamProcess.stdout.on('data', (data) => {
+                console.log(`${data}`);
                 return res.status(200).end();
             });
 
-            beamProcess.on("error", (error) => {
-                console.error("Error starting BeamMP process:", error);
+            beamProcess.stderr.on('data', (data) => {
+                console.error(`Error: ${data}`);
             });
 
             version++;
@@ -261,7 +326,7 @@ app.post("/upload-mod", fileUpload(), (req, res) => {
                     }
                 }
 
-                fs.writeFileSync("./mods.json", JSON.stringify(modsData, null, 2));
+                fs.writeFileSync(modsJsonPath, JSON.stringify(modsData, null, 2));
                 res.status(200).send('File uploaded successfully');
             })
             .catch(err => {
@@ -277,7 +342,7 @@ app.post("/change-mods", (req, res) => {
         data += chunk;
     });
 
-    req.on("end", () => {
+    req.on("end", async () => {
         let json = JSON.parse(data);
 
         let active = json.active;
@@ -285,18 +350,29 @@ app.post("/change-mods", (req, res) => {
 
         for (let i = 0; i < active.length; i++) {
             try {
-                fs.renameSync(`./Resources/Disabled/${active[i]}.zip`, `./Resources/Client/${active[i]}.zip`)
-                isMap("./Resources/Client/" + active[i] + ".zip")
-                    .then(result => {
-                        if (result) {
-                            modsData.maps.push(active[i]);
-                        } else {
-                            modsData.addons.push(active[i]);
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
+
+                try {
+                    fs.renameSync(`./Resources/Disabled/${active[i]}.zip`, `./Resources/Client/${active[i]}.zip`)
+                } catch (err) {
+                    if (err.code === 'EXDEV') {
+                        // Copy + unlink fallback
+                        fs.copyFileSync(`./Resources/Disabled/${active[i]}.zip`, `./Resources/Client/${active[i]}.zip`);
+                        fs.unlinkSync(`./Resources/Disabled/${active[i]}.zip`);
+                    } else {
+                        throw err;
+                    }
+                }
+
+                try {
+                    let result = await isMap("./Resources/Client/" + active[i] + ".zip");
+                    if (result) {
+                        modsData.maps.push(active[i]);
+                    } else {
+                        modsData.addons.push(active[i]);
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
             } catch (e) {
                 console.error(e);
                 res.status(500).end();
@@ -314,7 +390,17 @@ app.post("/change-mods", (req, res) => {
             }
 
             try {
-                fs.renameSync(`./Resources/Client/${disabled[i]}.zip`, `./Resources/Disabled/${disabled[i]}.zip`)
+                try {
+                    fs.renameSync(`./Resources/Client/${disabled[i]}.zip`, `./Resources/Disabled/${disabled[i]}.zip`)
+                } catch (err) {
+                    if (err.code === 'EXDEV') {
+                        // Copy + unlink fallback
+                        fs.copyFileSync(`./Resources/Client/${disabled[i]}.zip`, `./Resources/Disabled/${disabled[i]}.zip`);
+                        fs.unlinkSync(`./Resources/Client/${disabled[i]}.zip`);
+                    } else {
+                        throw err;
+                    }
+                }
             } catch (e) {
                 console.error(e);
                 res.status(500).end();
@@ -322,7 +408,9 @@ app.post("/change-mods", (req, res) => {
             }
         }
 
-        fs.writeFileSync("./mods.json", JSON.stringify(modsData, null, 2));
+        console.log(modsData);
+
+        fs.writeFileSync(modsJsonPath, JSON.stringify(modsData, null, 2));
 
         res.status(200).end();
     });
@@ -391,7 +479,18 @@ async function unzipRunAndRemove(zipFilePath, extractTo, fileName) {
 
             finder.on("close", (code) => {
                 if (code === 0) {
-                    fs.renameSync(`./${fileName}.rds`, `./Roads/${fileName}.rds`);
+                    try {
+                        fs.renameSync(`./${fileName}.rds`, `./Roads/${fileName}.rds`)
+                    } catch (err) {
+                        if (err.code === 'EXDEV') {
+                            // Copy + unlink fallback
+                            fs.copyFileSync(`./${fileName}.rds`, `./Roads/${fileName}.rds`);
+                            fs.unlinkSync(`./${fileName}.rds`);
+                        } else {
+                            throw err;
+                        }
+                    }
+                    
                     resolve();
                 } else {
                     reject(new Error(`road-finder exited with code ${code}`));

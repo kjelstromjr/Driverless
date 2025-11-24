@@ -7,7 +7,7 @@ let offlineDisplayed = false;
 
 let playerData = [];
 
-let debug = false;
+let debug = true;
 
 let currentMap = "";
 let maxPlayers = -1;
@@ -230,6 +230,12 @@ function restart() {
     }).then(res => {
         if (res.ok) {
             window.location.reload();
+        } else if (res.status === 404) {
+            message("Map not found, setting map to default");
+            window.setTimeout(() => {
+                document.getElementById("maps").value = "gridmap_v2";
+                restart();
+            }, 3000);
         } else {
             err("Could not Restart");
             console.error("Could Not Restart");
@@ -304,7 +310,7 @@ async function upload() {
 
             window.setInterval(() => {
                 document.getElementById("uploadMessage").textContent = uploadingPhrases[Math.round(Math.random() * (uploadingPhrases.length - 1))] + "...";
-            }, 10000);
+            }, 5000);
 
             const response = await fetch(window.location.origin + "/upload-mod", {
                 method: 'POST',
@@ -552,6 +558,9 @@ function getMods() {
         for (let i = 0; i < active.length; i++) {
             let mod = active[i];
             let name = mod.substring(0, mod.length - 4);
+            if (name === "mods.") {
+                continue;
+            }
             html += `<div class="option body3">
                         <span>${name}</span>
                         <label class="switch" onmouseup="updateMods(this, event)">
@@ -579,6 +588,7 @@ function getMods() {
                             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                         </svg>
                     </div>
+                    <br>
                     <h1>Upload Mods</h1>
                     <div class="horizontalGrid">
                         <input type="file" name="files" id="files" accept=".zip" multiple>
@@ -713,6 +723,9 @@ function restore() {
 
         document.getElementById("sleep").checked = true;
         localStorage.setItem("sleep", true);
+
+        document.getElementById("reloadOnUpdate").checked = true;
+        localStorage.setItem("reloadOnUpdate", true);
     }
 }
 

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  driverless:
+    build: .
+    container_name: driverless-server
+    ports:
+      - "3000:3000"           # Web interface (adjust if you change PORT in main.js)
+      - "30814:30814"     # BeamMP server port
+    volumes:
+      - ./Resources:/app/Resources  # Persist server data and mods
+      - ./ServerConfig.toml:/app/ServerConfig.toml  # Persist configuration
+      - ./main.js:/app/main.js  # Allow port configuration changes
+      - ./Roads:/app/Roads  # Persist extracted road data
+      - ./mods.json:/app/mods.json
+    restart: unless-stopped
