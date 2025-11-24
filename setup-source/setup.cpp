@@ -97,7 +97,7 @@ int main(int argc, char const *argv[]) {
     // Installing beammp server
     try {
         cout << "Installing beammp..." << endl;
-        system("wget https://github.com/BeamMP/BeamMP-Server/releases/download/v3.4.1/BeamMP-Server.ubuntu.22.04.x86_64");
+        system("wget https://github.com/BeamMP/BeamMP-Server/releases/download/v3.9.0/BeamMP-Server.ubuntu.22.04.x86_64");
     } catch (...) {
         cout << RED << "Unable to install beammp" << RESET << endl;
         return 1;
