@@ -8,7 +8,7 @@ const yauzl = require('yauzl');
 const AdmZip = require('adm-zip');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = 80;
 
 let playerData = [];
 
@@ -25,7 +25,7 @@ let version = 1;
 
 const { spawn } = require('child_process');
 
-let beamProcess = spawn('./BeamMP-Server.ubuntu.22.04.x86_64');
+let beamProcess = spawn('sudo', ['./BeamMP-Server.ubuntu.22.04.x86_64']);
 
 beamProcess.stdout.on('data', (data) => {
   console.log(`${data}`);
@@ -34,50 +34,6 @@ beamProcess.stdout.on('data', (data) => {
 beamProcess.stderr.on('data', (data) => {
   console.error(`Error: ${data}`);
 });
-
-// Adjust these paths:
-const pluginDir = path.join(__dirname, "Resources/Server/DriverlessPlugin");
-const sourceFile = path.join(__dirname, "plugins/Driverless.lua");        // Where the file currently is
-const destFile = path.join(pluginDir, "Driverless.lua");           // Where it should end up
-
-function ensurePluginFile() {
-  // Create directory if missing
-  if (!fs.existsSync(pluginDir)) {
-    console.log("DriverlessPlugin directory missing — creating it...");
-    fs.mkdirSync(pluginDir, { recursive: true });
-  }
-
-  // If the file is already in the directory, stop
-  if (fs.existsSync(destFile)) {
-    console.log("Lua file already exists in DriverlessPlugin. Nothing to do.");
-    return;
-  }
-
-  // Ensure source file exists
-  if (!fs.existsSync(sourceFile)) {
-    console.error("Source Lua file does NOT exist. Cannot move.");
-    return;
-  }
-
-  // Move the file
-  try {
-    try {
-        fs.renameSync(sourceFile, destFile);    } catch (err) {
-        if (err.code === 'EXDEV') {
-            // Copy + unlink fallback
-            fs.copyFileSync(sourceFile, destFile);
-            fs.unlinkSync(sourceFile);
-        } else {
-            throw err;
-        }
-    }
-    console.log("Lua file moved successfully!");
-  } catch (err) {
-    console.error("Error moving file:", err);
-  }
-}
-
-ensurePluginFile();
 
 // app.use(bodyParser.json());
 // app.use(fileUpload());
@@ -170,7 +126,6 @@ app.get('/', (req, res) => {
 // Endpoint to receive player position data
 app.post('/player-position', bodyParser.json(), (req, res) => {
     const { points } = req.body;
-    //console.log(`Points: ${JSON.stringify(points)}`);
     playerData = points;
     res.status(200).send('Position received');
 });
@@ -255,8 +210,8 @@ app.post("/update-settings", (req, res) => {
             maxPlayers = players;
             maxCars = cars;
 
-            beamProcess.stdout.on('data', (data) => {
-                console.log(`${data}`);
+            beamProcess.on("spawn", () => {
+                //console.log("Response sent to client");
                 return res.status(200).end();
             });
 
@@ -265,6 +220,8 @@ app.post("/update-settings", (req, res) => {
             });
 
             version++;
+
+            res.status(200).end();
         } catch (error) {
             console.error("Error in request handling:", error);
             return res.status(500).end();

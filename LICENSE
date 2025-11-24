@@ -1,5 +1,8 @@
-MIT License
+Driverless License (MIT-Based with Additional Restrictions)
 Copyright (c) 2024 Jeffrey Kjelstrom
+
+This license is based on the MIT License but includes additional restrictions 
+related to commercial usage. It is therefore not a pure MIT License.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -10,6 +13,12 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
+Commercial Use Restriction:
+Commercial services (such as paid game server providers) are prohibited from 
+charging users additional fees specifically for access to or use of this Software. 
+The Software must be made available to all users of such services at no extra 
+cost beyond standard service or hosting fees not tied to this Software.
 
 Additional Disclaimer:
 This project is an independent, third-party development and is not affiliated
