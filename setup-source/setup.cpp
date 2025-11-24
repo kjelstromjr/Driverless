@@ -20,18 +20,21 @@ void editLineInFile(const std::string& filename, int lineToEdit, const std::stri
 
     std::vector<std::string> lines;
     std::string line;
-    int lineNumber = 0;
 
     // Read all lines into a vector
     while (std::getline(inputFile, line)) {
-        if (lineNumber == lineToEdit) {
-            lines.push_back(newContent); // Replace the target line
-        } else {
-            lines.push_back(line);
-        }
-        lineNumber++;
+        lines.push_back(line);
     }
     inputFile.close();
+
+    // Check if the line number is valid
+    if (lineToEdit < 0 || lineToEdit >= lines.size()) {
+        std::cerr << "Invalid line number. File has " << lines.size() << " lines.\n";
+        return;
+    }
+
+    // Replace the target line
+    lines[lineToEdit] = newContent;
 
     // Write the modified content back to the file
     std::ofstream outputFile(filename);
