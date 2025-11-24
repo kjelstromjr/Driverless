@@ -10,99 +10,67 @@ Driverless features a live map of the server showing the current postions of all
 
 Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.com/server/create-a-server/) for more information on running a server.
 
-**Linux (Ubuntu):**
+If you haven't already, get a key from [Keymaster](https://beammp.com/keymaster). You will need this later.
 
-1. Install Diverless using git or download the latest release
+1. Install Docker. We recommend installing [Docker Desktop](https://docs.docker.com/desktop/) for simplicity
 
-```bash
-git clone https://github.com/kjelstromjr/Driverless.git
-```
+2. Download Driverless with git or with the lastest version
 
-2. Run the setup program
+3. Open the Driverless folder and find the `ServerConfig.toml` file. Open it and find a line at the bottom that is exactly:
 
 ```bash
-./setup
+AuthKey = ""
 ```
 
-If you haven't already, get a key from [Keymaster](https://beammp.com/keymaster). You will be prompted to enter it in at the end of setup
-
-You may need to run the following to add execution privilages to the program
-```bash
-chmod +x setup
-```
-
-**Windows and other Linux flavors:** 
-
-This project is mainly built for running on Ubuntu, however you can get it running on other system with a few extra steps. The only thing that won't work is the processing of custom map to display live.
-
-For Windows: I would recommend installing **WSL (Ubuntu on Windows)** and running the program with the step above for Ubuntu
-
-Here are the installation steps:
- 
-1. Install Diverless using git or download the latest release
+4. Add your key in-between the quotation marks
 
 ```bash
-git clone https://github.com/kjelstromjr/Driverless.git
+AuthKey = "YOUR-KEY-HERE"
 ```
 
-2. Install all of the dependencies
+5. Open a terminal and change the current directory to the Driverless folder
 
- - Node.js
- - npm
- - Lua
-   - Recommend version 5.3 dev
-   - For Linux: ```sudo apt install liblua5.3-dev```
- - lua-socket
-   - For Linux: ```sudo apt install lua-socket```
- - lua-json
-   - For Linux: ```sudo apt install lua-json``` 
-
-3. Install Node.js modules
+6. Start Driverless with the following command:
 
 ```bash
-npm install
+docker-compose up
 ```
+> This may take a while since the image needs to build for the first time
 
-4. Download the correct [beamMP](https://beammp.com/) server executable and put it in the Driverless folder
+7. You should now have a fully functional Driverless and Beammp server!
 
-5. Create the following folders and subfolders in the Driverless folder:
-
- - Resources
-   - Server
-     - DriverlessPlugin
-   - Disabled
-
-6. Move the lua file in the plugins folder to the Resources/Server/DriverlessPlugin folder
-
-7. Inside of the ServerConfig.toml file, there is a line that says ```AuthKey = ""```. Go to [Keymaster](https://beammp.com/keymaster) and generate a key, then place the key inside of the quotations and save the file
-
-8. If you would like to change the port the server is run on (default 80), change the value on line 10 of main.js
-
-9. On line 27 of main.js, change where it says ```'./BeamMP-Server.ubuntu.22.04.x86_64'``` to whatever the name of the executable you downloaded for beamMP is. Make sure to keep the "./" at the beginning of the name. For Windows users, make sure to include the .exe after the name
-
-10. All done! You may need to run the BeamMP executable once alone to get additional things set up.
+8. Access the Driverless website using http://localhost
 
 ## Starting Server
-Run the server with the command:
+To start up the server, simply run:
 
 ```bash
-sudo node main.js
+docker-compose up
 ```
 
-The webpage can now be accessed at localhost:[the port you chose (default 3000)]
+The webpage can now be accessed at http://localhost
 ## Maintainance
 
 #### Updates:
-Changes to the code of this project can simply be downloaded onto your system using `git pull`
+Changes to the code of this project can applied using the following steps:
+1. If you used git to download the original code, use:
+
+```bash
+git pull
+```
+
+1. If you downloaded using the version, download the latest version. You will have to copy the following to your new folder: `Resources`, `Roads`, `mods.json`
+
+2. Update the image
+
+```bash
+docker-compose up --build
+```
 
 Any updates to the BeamMP server file needs to be manually redownloaded from the offical [BeamMP Github](https://github.com/BeamMP/BeamMP-Server/releases/)
 
 #### Going Public:
-Making your server's webpage public is very simple. First, go into `main.js` and change the `PORT` variable on line 10 to the port you would like to use.  
-
-If you are new to web hosting, port 80 is for HTTP, and is used by all websites on the internet. Please note that HTTP is not secure and should be used with caution. You can also use any other, non-reserved ports for your site.
-
-Your chosen port, as well as port 30814 for BeamMP, need to be port forwarded on your network.
+Making your server public requires that you setup your router to forward port 80 (Driverless) and 30814 (Beammp). Allow TCP and UDP for both.
 
 DISCLAIMER:
 By port forwarding, you acknowledge the risks associated with opening ports on your network and waive any right to hold the creators of Driverless and BeamMP accountable for any negative consequences.
