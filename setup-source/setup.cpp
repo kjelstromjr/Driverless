@@ -160,7 +160,7 @@ int main(int argc, char const *argv[]) {
         cout << "Enter AuthKey provided by BeamMP: ";
         cin >> key;  // Reads input until the first space
         string line = "AuthKey = \"" + key + "\"";
-        editLineInFile("ServerConfig.toml", 27, line);
+        editLineInFile("ServerConfig.toml", 29, line);
     } catch (...) {
         cout << RED << "Unable to add AuthKey to ServerConfig.toml" << RESET << endl;
         return 1;
@@ -177,7 +177,7 @@ int main(int argc, char const *argv[]) {
     }
 
     string line = "const PORT = " + port + ";";
-    editLineInFile("main.js", 9, line);
+    editLineInFile("main.js", 11, line);
 
     cout << endl;
 
