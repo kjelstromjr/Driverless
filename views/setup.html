@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="setup.css">
+</head>
+<body>
+    <div class="center">
+        <div class="main-area body2">
+            <h1>Setup</h1>
+            <span>Fill in these fields to set up the server</span>
+            <br><br>
+            <div class="input-field">
+                <label>BeamMP Key</label>
+                <div class="text-input body3">
+                    <input id="key" type="text" value="" oninput="checkForm()">
+                </div>
+                <span>If you need a key, go to <a href="https://keymaster.beammp.com/" target="_blank">BeamMP's Keymaster</a></span>
+            </div>
+            <br><br>
+            <div class="input-field">
+                <label>Admin Password</label>
+                <div class="text-input body3">
+                    <input id="password" type="text" value="" oninput="checkForm()">
+                </div>
+                <span>Make sure you remember this, it is difficult to reset</span>
+            </div>
+            <br><br>
+            <button id="finishButton" class="actionbutton" onclick="finishSetup()" disabled>Finish</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="setup.js"></script>
+</body>
+</html>

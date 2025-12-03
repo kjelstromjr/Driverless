@@ -254,6 +254,10 @@ body {
     display: none;
 }
 
+#admin-popup {
+    display: none;
+}
+
 .popupButton {
     /* position: absolute;
     top: 10px;
@@ -465,6 +469,22 @@ input[type="file"]::-webkit-file-upload-button {
 }
 
 #settings-popup {
+    display: none;
+}
+
+#server-settings > div {
+    display: none;
+}
+
+#admin-settings-popup {
+    display: none;
+}
+
+#mods {
+    display: none;
+}
+
+#adminSettingsPopupButton {
     display: none;
 }
 

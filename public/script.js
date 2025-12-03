@@ -7,7 +7,7 @@ let offlineDisplayed = false;
 
 let playerData = [];
 
-let debug = false;
+let debug = true;
 
 let currentMap = "";
 let maxPlayers = -1;
@@ -26,6 +26,8 @@ let wakeLocked = true;
 let reloadOnUpdate = true;
 
 let version = 0;
+
+let currentAllowed;
 
 let uploadingPhrases = ["Accessing mainframe", "Downloading consciousness", "Uploading the virus", "Deactivating HAL", "Booting up JARVIS", "Loading program", "Transmitting coordinates", "Executing order 66", "Initiating launch sequence", "Reactor meltdown in T-minus", "Re-routing power", "Preparing for re-entry", "Activating override protocols", "Opening pod bay doors", "Scanning for threats", "Mapping the genome", "Rebuilding the system", "Launching the nukes", "Critical failure imminent", "Diverting all energy to engines", "Decrypting the files", "Bypassing encryption", "Uploading ghost protocol", "Syncing data stream", "Rebuilding neural pathways", "Activating autonomous protocols", "Running diagnostics", "Engaging stealth mode", "AI directive in progress", "Aligning trajectory", "Initiating hyperspace jump", "Docking sequence initiated", "Launching the drone", "Flooding the core chamber"];
 
@@ -74,8 +76,8 @@ class Player {
     update() {
         if (this.wasClicked) {
             //console.log("move");
-            fx = this.x + 500;
-            fy = this.y + 500;
+            fx = this.x; // or + 500
+            fy = this.y; // or + 500
         }
     }
 
@@ -195,6 +197,8 @@ function closePopups() {
     document.getElementById("restarting").style.display = "none";
     document.getElementById("upload-popup").style.display = "none";
     document.getElementById("settings-popup").style.display = "none";
+    document.getElementById("admin-popup").style.display = "none";
+    document.getElementById("admin-settings-popup").style.display = "none";
 
     displayOpen = false;
 }
@@ -217,7 +221,10 @@ function restart() {
     let data = {
         map: document.getElementById("maps").value,
         maxPlayers: document.getElementById("players").value,
-        maxCars: document.getElementById("cars").value
+        maxCars: document.getElementById("cars").value,
+        name: document.getElementById("serverName").value,
+        description: document.getElementById("serverDescription").value,
+        visibility: document.getElementById("visibility-options").value
     }
 
     fetch(window.location.origin + "/update-settings", {
@@ -267,6 +274,11 @@ function openMods() {
 function openSettings() {
     displayOpen = true;
     document.getElementById("settings-popup").style.display = "flex";
+}
+
+function openAdminSettings() {
+    displayOpen = true;
+    document.getElementById("admin-settings-popup").style.display = "flex";
 }
 
 async function upload() {
@@ -481,6 +493,16 @@ function getSetup() {
 
         document.getElementById("players").value = maxPlayers;
         document.getElementById("cars").value = maxCars;
+
+        document.getElementById("serverName").value = json.name;
+
+        document.getElementById("serverDescription").value = json.description;
+
+        if (json.visibility === "true" || json.visibility === true) {
+            document.getElementById("visibility-options").value = "private";
+        } else {
+            document.getElementById("visibility-options").value = "public";
+        }
 
         getMaps();
     }).catch(err => {
@@ -752,6 +774,124 @@ function changeReload() {
     localStorage.setItem("reloadOnUpdate", reloadOnUpdate);
 }
 
+function checkAdmin() {
+    let password = document.getElementById("adminPassword").value;
+
+    if (password === "") {
+        message("Please enter a password");
+        return;
+    }
+
+    let d = {
+        password: password
+    }
+
+    fetch(window.location.origin + "/admin-login", {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Origin": window.location.origin + ""
+        },
+        body: JSON.stringify(d)
+    }).then(res => {
+        if (res.ok) {
+            message("Admin mode unlocked");
+            sessionStorage.setItem("admin", true);
+            allowed();
+            closePopups();
+        } else {
+            err("Incorrect");
+        }
+    }).catch(err => {
+        console.error(err);
+        err("An Error Occurred While Loading Data");
+    });
+}
+
+function allowed() {
+    if (sessionStorage.getItem("admin") === "true") {
+        let settings = document.getElementById("server-settings").children;
+
+        for (let i = 0; i < settings.length; i++) {
+            settings[i].style.display = "flex";
+        }
+
+        document.getElementById("mods").style.display = "flex";
+        document.getElementById("adminSettingsPopupButton").style.display = "flex";
+    }
+
+    fetch(window.location.origin + "/allowed", {
+        method: "GET",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Origin": window.location.origin + ""
+        }
+    }).then(res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            err("Something went wrong");
+        }
+    }).then(json => {
+        let allowed = json.allowed;
+
+        if (allowed === undefined) {
+            currentAllowed = [];
+            return;
+        }
+
+        for (let i = 0; i < allowed.length; i++) {
+            document.getElementById(allowed[i]).style.display = "flex";
+            document.getElementById(allowed[i] + "Switch").checked = true;
+        }
+
+        currentAllowed = json.allowed;
+    }).catch(err => {
+        console.error(err);
+        err("An Error Occurred While Loading Data");
+    });
+}
+
+allowed();
+
+function setAllowed() {
+
+    if (document.getElementById("allowedUpdateButton").disabled) {
+        err("How did you get here?");
+    }
+
+    fetch(window.location.origin + "/set-allowed", {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Origin": window.location.origin + ""
+        },
+        body: JSON.stringify({
+            allowed: currentAllowed
+        })
+    }).then(res => {
+        if (res.ok) {
+            message("Allowed settings updated");
+            allowed();
+        } else {
+            err("Something went wrong");
+        }
+    }).catch(err => {
+        console.error(err);
+        err("An Error Occurred While Loading Data");
+    });
+}
+
+function updateChanged(setting) {
+    document.getElementById("allowedUpdateButton").disabled = false;
+
+    if (currentAllowed.indexOf(setting) >= 0) {
+        currentAllowed = currentAllowed.filter(v => v !== setting);
+    } else {
+        currentAllowed.push(setting);
+    }
+}
+
 function err(thing) {
     let m = document.getElementById("message");
     if (m.innerHTML !== `<div style="color: darkred;background-color: rgb(255, 125, 125);">${thing}</div>`) {
@@ -824,3 +964,13 @@ if (localStorage.getItem("reloadOnUpdate") === "true" || localStorage.getItem("r
     document.getElementById("reloadOnUpdate").checked = false;
     reloadOnUpdate = false;
 }
+
+document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "a") {
+        displayOpen = true;
+        document.getElementById("admin-popup").style.display = "flex";
+        window.setTimeout(() => {
+            document.getElementById("adminPassword").focus();
+        }, 100);
+    }
+});

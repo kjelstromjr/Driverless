@@ -6,9 +6,10 @@ const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const yauzl = require('yauzl');
 const AdmZip = require('adm-zip');
+const crypto = require('crypto');
 const path = require('path');
 const app = express();
-const PORT = 80;
+const PORT = 3000;
 
 let playerData = [];
 
@@ -18,22 +19,55 @@ let disabledMods = [];
 let maxPlayers = -1;
 let maxCars = -1;
 let currentMap = "";
+let title = "";
+let description = "";
+let visibility = false;
 
 let exit = false;
 
 let version = 1;
 
+let setup = false;
+
 const { spawn } = require('child_process');
 
-let beamProcess = spawn('./BeamMP-Server.ubuntu.22.04.x86_64');
+const dataJsonPath = path.join(__dirname, "data.json");
 
-beamProcess.stdout.on('data', (data) => {
-  console.log(`${data}`);
-});
+let serverData = {
+    key: "",
+    password: "",
+    allowed: []
+}
 
-beamProcess.stderr.on('data', (data) => {
-  console.error(`Error: ${data}`);
-});
+if (!fs.existsSync(dataJsonPath)) {
+    fs.writeFileSync(dataJsonPath, JSON.stringify(serverData), 'utf8');
+}
+
+currData = fs.readFileSync(dataJsonPath, 'utf-8');
+if (!currData || currData.trim() === '') {
+    fs.writeFileSync(dataJsonPath, JSON.stringify(serverData), 'utf8');
+}
+
+serverData = JSON.parse(fs.readFileSync(dataJsonPath, 'utf-8'));
+
+if (serverData.key === "" || serverData.password === "") {
+    console.log("Looks like we need to do some setup, please go to the webpage");
+    setup = true;
+}
+
+let beamProcess;
+
+if (!setup) {
+    beamProcess = spawn('./BeamMP-Server.ubuntu.22.04.x86_64');
+
+    beamProcess.stdout.on('data', (data) => {
+      console.log(`${data}`);
+    });
+
+    beamProcess.stderr.on('data', (data) => {
+      console.error(`Error: ${data}`);
+    });
+}
 
 // Adjust these paths:
 const pluginDir = path.join(__dirname, "Resources/Server/DriverlessPlugin");
@@ -49,7 +83,7 @@ function ensurePluginFile() {
 
   // If the file is already in the directory, stop
   if (fs.existsSync(destFile)) {
-    console.log("Lua file already exists in DriverlessPlugin. Nothing to do.");
+    // console.log("Lua file already exists in DriverlessPlugin. Nothing to do.");
     return;
   }
 
@@ -79,6 +113,22 @@ function ensurePluginFile() {
 
 ensurePluginFile();
 
+function hashStringSHA256(str) {
+  return crypto.createHash('sha256')
+               .update(str)
+               .digest('hex');
+}
+
+function updateLineSync(filePath, lineNumber, newContent) {
+    console.log(filePath);
+    let data = fs.readFileSync(filePath, "utf8");
+    let lines = data.split(/\r?\n/);
+
+    lines[lineNumber - 1] = newContent;
+
+    fs.writeFileSync(filePath, lines.join("\n"));
+}
+
 // app.use(bodyParser.json());
 // app.use(fileUpload());
 
@@ -103,6 +153,15 @@ for (let i = 0; i < serverConfig.length; i++) {
     } else if (line.includes("MaxCars")) {
         let carsLine = line.split(" ");
         maxCars = parseInt(carsLine[2])
+    } else if (line.includes("Name")) {
+        let nameLine = line.split("\"");
+        title = nameLine[1];
+    } else if (line.includes("Private")) {
+        let privateLine = line.split(" ");
+        visibility = privateLine[2];
+    } else if (line.includes("Description")) {
+        let descLine = line.split("\"");
+        description = descLine[1];
     }
 }
 
@@ -164,7 +223,87 @@ if (exit) {
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + "/views/index.html");
+    if (setup) {
+        res.sendFile(__dirname + "/views/setup.html");
+    } else {
+        res.sendFile(__dirname + "/views/index.html");
+    }
+});
+
+app.post('/setup', (req, res) => {
+    let data = "";
+
+    req.on("data", (chunk) => {
+        data += chunk;
+    });
+
+    req.on("end", () => {
+        try {
+            let json = JSON.parse(data);
+            let key = json.key;
+            let password = json.password;
+
+            serverData.key = key;
+            serverData.password = hashStringSHA256(password);
+            serverData.allowed = ["mods", "map", "numPlayers", "numCars"];
+
+            fs.writeFileSync(dataJsonPath, JSON.stringify(serverData), 'utf8');
+            updateLineSync(__dirname + "/ServerConfig.toml", 29, `AuthKey = "${serverData.key}"`);
+
+            console.log("The process is about to exit...");
+            console.log("If you are viewing the logs without the docker-compose \"-d\" flag (ex: docker-compose up), you may need to exit to view the logs or open a new terminal");
+
+            process.exit(0);
+        } catch (e) {
+            res.status(500).end();
+        }
+    });
+});
+
+app.post('/admin-login', (req, res) => {
+    let data = "";
+
+    req.on("data", (chunk) => {
+        data += chunk;
+    });
+
+    req.on("end", () => {
+        let json = JSON.parse(data);
+        let password = json.password;
+
+        if (hashStringSHA256(password) === serverData.password) {
+            res.status(200).end();
+        } else {
+            res.status(404).end();
+        }
+    });
+});
+
+app.get("/allowed", (req, res) => {
+    res.json({allowed: serverData.allowed});
+    res.status(200).end();
+});
+
+app.post("/set-allowed", (req, res) => {
+    let data = "";
+
+    req.on("data", (chunk) => {
+        data += chunk;
+    });
+
+    req.on("end", () => {
+        let json = JSON.parse(data);
+
+        if (json.allowed === undefined) {
+            res.status(403).end();
+        }
+
+        serverData.allowed = json.allowed;
+
+        fs.writeFileSync(dataJsonPath, JSON.stringify(serverData), 'utf8');
+
+        res.status(200).end();
+    });
 });
 
 // Endpoint to receive player position data
@@ -188,7 +327,10 @@ app.post("/current-setup", (req, res) => {
     res.json({
         map: currentMap,
         maxPlayers: maxPlayers,
-        maxCars: maxCars
+        maxCars: maxCars,
+        name: title,
+        visibility: visibility,
+        description: description
     });
     res.status(200).end();
 });
@@ -211,9 +353,18 @@ app.post("/update-settings", (req, res) => {
             const map = json.map;
             const players = json.maxPlayers;
             const cars = json.maxCars;
+            const serverName = json.name;
+            let private = json.visibility;
+            let desc = json.description;
 
-            if (map === undefined || players === undefined || cars === undefined) {
+            if (map === undefined || players === undefined || cars === undefined || serverName === undefined || private === undefined || desc === undefined) {
                 return res.status(403).end();
+            }
+
+            if (private === "private") {
+                private = true;
+            } else {
+                private= false;
             }
 
             if (players < 0 || cars < 0) {
@@ -233,20 +384,27 @@ app.post("/update-settings", (req, res) => {
 
             // Update configuration with new map
             console.log("Updating map in configuration...");
-            let settings = fs.readFileSync("./ServerConfig.toml", "utf8").split("\n");
-            for (let i = 0; i < settings.length; i++) {
-                if (settings[i].includes("Map")) {
-                    let mapLine = settings[i].split("/");
-                    settings[i] = `${mapLine[0]}/${mapLine[1]}/${map}/${mapLine[3]}`;
-                } else if (settings[i].includes("MaxPLayers")) {
-                    let line = settings[i].split(" ");
-                    settings[i] = `${line[0]} ${mapLine[1]} ${players}`;
-                } else if (settings[i].includes("MaxCars")) {
-                    let line = settings[i].split(" ");
-                    settings[i] = `${line[0]} ${line[1]} ${cars}`;
-                }
-            }
-            fs.writeFileSync("./ServerConfig.toml", settings.join("\n"));
+            // let settings = fs.readFileSync("./ServerConfig.toml", "utf8").split("\n");
+            // for (let i = 0; i < settings.length; i++) {
+            //     if (settings[i].includes("Map")) {
+            //         let mapLine = settings[i].split("/");
+            //         settings[i] = `${mapLine[0]}/${mapLine[1]}/${map}/${mapLine[3]}`;
+            //     } else if (settings[i].includes("MaxPLayers")) {
+            //         let line = settings[i].split(" ");
+            //         settings[i] = `${line[0]} ${mapLine[1]} ${players}`;
+            //     } else if (settings[i].includes("MaxCars")) {
+            //         let line = settings[i].split(" ");
+            //         settings[i] = `${line[0]} ${line[1]} ${cars}`;
+            //     }
+            // }
+            // fs.writeFileSync("./ServerConfig.toml", settings.join("\n"));
+
+            updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${map}/info.json"`);
+            updateLineSync(__dirname + "/ServerConfig.toml", 30, `MaxPlayers = ${players}`);
+            updateLineSync(__dirname + "/ServerConfig.toml", 12, `MaxCars = ${cars}`);
+            updateLineSync(__dirname + "/ServerConfig.toml", 18, `Name = "${serverName}"`);
+            updateLineSync(__dirname + "/ServerConfig.toml", 19, `Private = ${private}`);
+            updateLineSync(__dirname + "/ServerConfig.toml", 11, `Description = "${desc}"`);
 
             // Restart the BeamMP server process asynchronously
             console.log("Starting new process...");
@@ -254,6 +412,9 @@ app.post("/update-settings", (req, res) => {
             currentMap = map;
             maxPlayers = players;
             maxCars = cars;
+            title = serverName;
+            visibility = private;
+            description = desc;
 
             beamProcess.stdout.on('data', (data) => {
                 console.log(`${data}`);
