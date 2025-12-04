@@ -34,9 +34,6 @@ RUN mkdir -p Resources/Server/DriverlessPlugin \
 # Copy application files
 COPY . .
 
-# Make road-finder executable
-RUN chmod +x /app/road-finder
-
 # Debug: List what was copied
 RUN echo "Contents of /app:" && ls -la && \
     echo "Contents of /app/plugins:" && ls -la plugins/ || echo "plugins directory not found"

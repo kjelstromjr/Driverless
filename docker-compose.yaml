@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   driverless:
     build: .
@@ -14,4 +12,5 @@ services:
       - ./main.js:/app/main.js  # Allow port configuration changes
       - ./Roads:/app/Roads  # Persist extracted road data
       - ./mods.json:/app/mods.json
+      - ./data.json:/app/data.json
     restart: unless-stopped

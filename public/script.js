@@ -322,7 +322,7 @@ async function upload() {
 
             window.setInterval(() => {
                 document.getElementById("uploadMessage").textContent = uploadingPhrases[Math.round(Math.random() * (uploadingPhrases.length - 1))] + "...";
-            }, 5000);
+            }, 10000);
 
             const response = await fetch(window.location.origin + "/upload-mod", {
                 method: 'POST',
