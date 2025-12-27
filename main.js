@@ -9,7 +9,7 @@ const AdmZip = require('adm-zip');
 const crypto = require('crypto');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = 80;
 
 let playerData = [];
 
@@ -493,6 +493,36 @@ app.post("/upload-mod", fileUpload(), (req, res) => {
             .catch(err => {
                 console.error(err);
             });
+    });
+});
+
+app.delete("/delete-mods", (req, res) => {
+    let data = "";
+
+    req.on("data", (chunk) => {
+        data += chunk;
+    });
+
+    req.on("end", () => {
+        let json = JSON.parse(data);
+        let toDelete = json.mods;
+
+        for (let i = 0; i < toDelete.length; i++) {
+            let mod = toDelete[i];
+
+            try {
+                fs.unlinkSync(`./Resources/Disabled/${mod}.zip`);
+                if (modsData.maps.contains(mod)) {
+                    modsData.maps.splice(modsData.maps.indexOf(mod), 1);
+                } else if (modsData.addons.contains(mod)) {
+                    modsData.addons.splice(modsData.addons.indexOf(mod), 1);
+                }
+            } catch (err) {
+                
+            }
+        }
+
+        res.status(200).end();
     });
 });
 

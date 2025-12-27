@@ -29,6 +29,11 @@ let version = 0;
 
 let currentAllowed;
 
+let offsetX = 500;
+let offsetY = 500;
+
+let playersDisplayed = false;
+
 let uploadingPhrases = ["Accessing mainframe", "Downloading consciousness", "Uploading the virus", "Deactivating HAL", "Booting up JARVIS", "Loading program", "Transmitting coordinates", "Executing order 66", "Initiating launch sequence", "Reactor meltdown in T-minus", "Re-routing power", "Preparing for re-entry", "Activating override protocols", "Opening pod bay doors", "Scanning for threats", "Mapping the genome", "Rebuilding the system", "Launching the nukes", "Critical failure imminent", "Diverting all energy to engines", "Decrypting the files", "Bypassing encryption", "Uploading ghost protocol", "Syncing data stream", "Rebuilding neural pathways", "Activating autonomous protocols", "Running diagnostics", "Engaging stealth mode", "AI directive in progress", "Aligning trajectory", "Initiating hyperspace jump", "Docking sequence initiated", "Launching the drone", "Flooding the core chamber"];
 
 class Line {
@@ -62,7 +67,7 @@ class Line {
 }
 
 class Player {
-    constructor(x, y, name) {
+    constructor(x, y, name, vehicleID) {
         this.x = x;
         this.y = y;
         this.name = name;
@@ -71,13 +76,14 @@ class Player {
         this.sx = 0;
         this.sy = 0;
         this.wasClicked = false;
+        this.vehicleID = vehicleID
     }
 
     update() {
-        if (this.wasClicked) {
+        if (following === this.vehicleID) {
             //console.log("move");
-            fx = this.x; // or + 500
-            fy = this.y; // or + 500
+            fx = this.x - (width / 2 / scale);
+            fy = -this.y - (height / 2 / scale); 
         }
     }
 
@@ -142,11 +148,12 @@ class Player {
         if (mouseX > this.sx && mouseY < this.sx + this.width && mouseY > this.sy && mouseY < this.sy + this.height) {
             //console.log("clicked");
             this.wasClicked = true;
+            following = this.vehicleID;
         }
     }
 }
 
-class Updater {
+class Updater { 
     update() {
         displayPlayers();       
     }
@@ -523,13 +530,16 @@ function displayPlayers() {
         try {
             let car = data[i];
             let user = car[0];
+            let id = car[1][0];
             let x = car[2].pos[0];
             let y = car[2].pos[1];
 
-            let player = new Player(x, y, user);
+            if (!playersDisplayed) {
+                let player = new Player(x, y, user, id);
 
-            objects.push(player);
-            players.push(player);
+                objects.push(player);
+                players.push(player);
+            }
 
             if (!online.includes(user)) {
                 online.push(user);
@@ -539,6 +549,8 @@ function displayPlayers() {
         }
     }
 
+    playersDisplayed = true;
+
     document.getElementById("players-online").textContent = online.length + " / " + maxPlayers;
 }
 
@@ -547,6 +559,8 @@ function clearPlayers() {
         objects.splice(objects.indexOf(players[i]), 1);
     }
 
+    playersDisplayed = false;
+
     players = [];
 }
 
@@ -554,8 +568,16 @@ function uploadPage() {
     document.getElementById("upload-page").style.left = "0%";
 }
 
+function deletePage() {
+    document.getElementById("delete-page").style.left = "0%";
+}
+
 function closeUploadPage() {
     document.getElementById("upload-page").style.left = "100%";
+}
+
+function closeDeletePage() {
+    document.getElementById("delete-page").style.left = "110%";
 }
 
 function getMods() {
@@ -618,6 +640,29 @@ function getMods() {
                     <br><br>
                     <div class="horizontalGrid">
                         <div class="actionbutton" onclick="upload()">Upload</div>
+                    </div>
+                </div>`;
+
+        html += `<div id="delete-page" class="page">
+                    <div class="back-arrow" onclick="closeDeletePage()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"></path>
+                        </svg>
+                    </div>
+                    <h1>Delete Mods</h1>
+                    <span>Disabled mods</span>`
+
+        for (let i = 0; i < disabled.length; i++) {
+            let mod = disabled[i];
+            let name = mod.substring(0, mod.length - 4);
+            html += `<div class="option option-select body3">
+                        <input type="checkbox" name="delete-${name}" id="delete-${name}">
+                        <span>${name}</span>
+                    </div>`;
+        }
+
+        html += `   <div class="horizontalGrid">
+                        <div class="stopbutton" onclick="startDelete()">Delete</div>
                     </div>
                 </div>`;
 
@@ -688,6 +733,44 @@ function changeMods() {
         console.error(err);
         err("An Error Occurred While Loading Data");
     });
+}
+
+function deleteMods(mods) {
+    let d = {
+        mods: mods
+    }
+
+    fetch(window.location.origin + "/delete-mods", {
+        method: "DELETE",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Origin": window.location.origin + ""
+        },
+        body: JSON.stringify(d)
+    }).then(res => {
+        message("Mods deleted");
+        window.setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    }).catch(err => {
+        console.error(err);
+        err("An Error Occurred While Loading Data");
+    });
+}
+
+function startDelete() {
+    let toBeDeleted = [];
+    let modsToCheck = document.getElementById("delete-page").getElementsByClassName("option-select");
+
+    for (let i = 0; i < modsToCheck.length; i++) {
+        let mod = modsToCheck[i];
+        let input = mod.getElementsByTagName("input")[0];
+        if (input.checked) {
+            toBeDeleted.push(input.name.split("-")[1]);
+        }
+    }
+
+    deleteMods(toBeDeleted);
 }
 
 function changeColor() {

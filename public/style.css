@@ -319,6 +319,21 @@ input[type="file"]::-webkit-file-upload-button {
     background-color: hsl(0, 0%, 15%);
 } */
 
+.option-select {
+    max-width: calc(100% - 40px);
+    justify-content: flex-start;
+}
+
+.option-select input {
+    accent-color: #e94949;
+    transform: scale(1.5);
+}
+
+.option-select:has(input:checked) {
+    outline: 1px solid #e94949;
+    background-color: #e9494933;
+}
+
 .page-link {
     padding: 10px;
     border-radius: 10px;
@@ -398,6 +413,15 @@ input[type="file"]::-webkit-file-upload-button {
     left: 100%;
     transition: left 0.25s linear;
     padding-left: 5px;
+}
+
+#delete-page {
+    position: absolute;
+    top: 0px;
+    left: 110%;
+    transition: left 0.25s linear;
+    padding-left: 5px;
+    gap: 20px;
 }
 
 .page {
@@ -480,9 +504,9 @@ input[type="file"]::-webkit-file-upload-button {
     display: none;
 }
 
-#mods {
+/* #mods {
     display: none;
-}
+} */
 
 #adminSettingsPopupButton {
     display: none;

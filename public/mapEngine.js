@@ -54,6 +54,8 @@ let displayOpen = false;
 
 let moving = false;
 
+let following;
+
 function wheel(e) {
     if (!displayOpen) {
         e.preventDefault();
@@ -122,6 +124,8 @@ onmousemove = function(e) {
         fx += (preMouseX - mouseX) / scale;
         fy += (preMouseY - mouseY) / scale;
 
+        following = null;
+
         // if (fx < 0) {
         //     fx = 0;
         // }
@@ -147,6 +151,7 @@ onmousedown = function(e) {
 
 onmouseup = function(e) {
     mouseDown = false;
+    moving = false;
 }
 
 onclick = function(e) {
