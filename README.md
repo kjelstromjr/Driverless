@@ -10,36 +10,26 @@ Driverless features a live map of the server showing the current postions of all
 
 Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.com/server/create-a-server/) for more information on running a server.
 
-If you haven't already, get a key from [Keymaster](https://beammp.com/keymaster). You will need this later.
-
 1. Install Docker. We recommend installing [Docker Desktop](https://docs.docker.com/desktop/) for simplicity
 
-2. Download Driverless with git or with the lastest version
-
-3. Open the Driverless folder and find the `ServerConfig.toml` file. Open it and find a line at the bottom that is exactly:
+2. Clone the respository with git or download the zip file for the latest version
 
 ```bash
-AuthKey = ""
+git clone https://github.com/kjelstromjr/Driverless
 ```
 
-4. Add your key in-between the quotation marks
+4. Open a terminal and change the current directory to the Driverless folder
 
-```bash
-AuthKey = "YOUR-KEY-HERE"
-```
-
-5. Open a terminal and change the current directory to the Driverless folder
-
-6. Start Driverless with the following command:
+5. Start Driverless with the following command:
 
 ```bash
 docker-compose up
 ```
 > This may take a while since the image needs to build for the first time
 
-7. You should now have a fully functional Driverless and Beammp server!
+5. You should now have a fully functional Driverless and Beammp server!
 
-8. Access the Driverless website using http://localhost
+9. Access the Driverless website using http://localhost
 
 ## Starting Server
 To start up the server, simply run:
@@ -49,6 +39,12 @@ docker-compose up
 ```
 
 The webpage can now be accessed at http://localhost
+
+## Setup
+When you open up the webpage for the first time, you will see a setup page. Here you will enter two items:
+- BeamMP Key: This is the server key that will authenticate your server with BeamMP
+- Admin Password: This is the password you will use to access the Admin mode (see Maintainance for more details about Admin mode)
+
 ## Maintainance
 
 #### Updates:
