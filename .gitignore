@@ -13,7 +13,3 @@ BeamMP-Server*
 Resources/
 
 .vscode
-
-package.json
-
-package-lock.json
