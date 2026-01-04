@@ -1,3 +1,5 @@
+import fs from "fs";
+
 import { hashStringSHA256, updateLineSync, updateDataFile } from "../utils/utils.js";
 import { dataJsonPath, serverData, __dirname } from "../utils/vars.js";
 
@@ -26,6 +28,7 @@ export function adminSetup(req, res) {
 
             process.exit(0);
         } catch (e) {
+            console.error(e);
             res.status(500).end();
         }
     });
