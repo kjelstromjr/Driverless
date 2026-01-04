@@ -19,8 +19,11 @@
   "dependencies": {
     "adm-zip": "^0.5.16",
     "body-parser": "^1.20.3",
+    "connect-livereload": "^0.6.1",
     "express": "^4.21.1",
     "express-fileupload": "^1.5.1",
+    "livereload": "^0.10.3",
     "yauzl": "^3.2.0"
-  }
+  },
+  "type": "module"
 }

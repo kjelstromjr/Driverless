@@ -13,4 +13,5 @@ services:
       - ./Roads:/app/Roads  # Persist extracted road data
       - ./mods.json:/app/mods.json
       - ./data.json:/app/data.json
+      - ./server.config.json:/app/server.config.json
     restart: unless-stopped

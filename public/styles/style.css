@@ -159,7 +159,7 @@ body {
     transition: background-color 0.1s linear;
     display: flex;
     align-items: center;
-    justify-self: center;
+    justify-content: center;
     gap: 5px
 }
 .defaultbutton:hover {
@@ -502,6 +502,20 @@ input[type="file"]::-webkit-file-upload-button {
 
 #admin-settings-popup {
     display: none;
+}
+
+#offseton {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    outline: 2px dashed white;
+    display: none;
+}
+
+#offsetButton {
+    display: none !important;
 }
 
 /* #mods {
