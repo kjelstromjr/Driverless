@@ -68,8 +68,14 @@ Any updates to the BeamMP server file needs to be manually redownloaded from the
 #### Administration:
 You can access the admin mode using Ctrl+Alt+A. This will give you full control over the server, including choosing what the public has access to.
 
+#### HTTPS:
+To enable HTTPS, open `server.config.json` and change `enable` under `https` to `true`. Then add the locations of your SSL key and certificate in `keyPath` and `certPath`.
+
+#### Changing the port:
+To change the port of Driverless, open `server.config.json` and change the port option
+
 #### Going Public:
-Making your server public requires that you setup your router to forward port 80 (Driverless) and 30814 (Beammp). Allow TCP and UDP for both.
+Making your server public requires that you setup your router to forward port 80 (Default Driverless) and 30814 (Beammp). Allow TCP and UDP for both.
 
 DISCLAIMER:
 By port forwarding, you acknowledge the risks associated with opening ports on your network and waive any right to hold the creators of Driverless and BeamMP accountable for any negative consequences.
