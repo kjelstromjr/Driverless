@@ -47,7 +47,14 @@ getSetup();
 
 allowed();
 
-const socket = new WebSocket(`ws://${window.location.host}`);
+const isSecure = window.location.protocol === 'https:';
+let socket;
+
+if (isSecure) {
+    socket = new WebSocket(`wss://${window.location.host}`);
+} else {
+    socket = new WebSocket(`ws://${window.location.host}`);
+}
 
 socket.onopen = () => {
     console.log("Connected");
