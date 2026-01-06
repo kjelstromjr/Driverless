@@ -1,3 +1,5 @@
+let players = [];
+
 async function requestWakeLock() {
   if (!('wakeLock' in navigator)) {
     return;

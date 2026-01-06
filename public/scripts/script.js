@@ -1,8 +1,6 @@
 const rootStyles = getComputedStyle(document.documentElement);
 let actionColor = rootStyles.getPropertyValue('--action').trim();
 
-let players = [];
-
 let offlineDisplayed = false;
 
 let playerData = [];
@@ -61,8 +59,9 @@ socket.onopen = () => {
 };
 
 socket.onmessage = (event) => {
-    let json = event.data;
+    let json = JSON.parse(event.data);
     playerData = json.playerData;
+
     if (json.version !== version) {
         if (version < 1) {
             version = json.version;
@@ -72,6 +71,8 @@ socket.onmessage = (event) => {
             }
         }
     }
+
+    clearPlayers();
 };
 
 socket.onclose = () => {

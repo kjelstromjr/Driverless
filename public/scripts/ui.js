@@ -108,7 +108,10 @@ function displayNodes(nodes) {
 function displayPlayers() {
     let data = playerData;
 
-    //console.log(data[0]);
+    if (data === undefined) {
+        return;
+    }
+
     let online = [];
     offlineDisplayed = false;
 
