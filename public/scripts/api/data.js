@@ -42,6 +42,39 @@ function restart() {
     // }, 1000);
 }
 
+function uploadFile(formData) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "/upload-mod");
+
+        xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+                setProgressBar((e.loaded / e.total) * 90);
+            }
+        };
+
+        xhr.onload = () => {
+            const response = {
+                ok: xhr.status >= 200 && xhr.status < 300,
+                status: xhr.status,
+                text: () => Promise.resolve(xhr.responseText),
+                json: () => Promise.resolve(JSON.parse(xhr.responseText))
+            };
+
+            resolve(response);
+        };
+
+        xhr.onerror = reject;
+
+        xhr.send(formData);
+    });
+}
+
+function setProgressBar(percent) {
+    document.getElementById("progress-bar").style.width = `${percent}%`;
+}
+
 async function upload() {
     if (document.getElementById("files").value === "") {
         message("Please Select a File to Upload");
@@ -70,6 +103,9 @@ async function upload() {
                 <div class="dot"></div>
                 <div class="dot"></div>
             </div>
+            <div id="progress">
+                <div id="progress-bar"></div>
+            </div>
             <h3 id="uploadMessage">Uploading files...</h3>
             <span id="yup" style="display: none">Yup, still going</span>`;
 
@@ -85,10 +121,12 @@ async function upload() {
                 document.getElementById("uploadMessage").textContent = uploadingPhrases[Math.round(Math.random() * (uploadingPhrases.length - 1))] + "...";
             }, 10000);
 
-            const response = await fetch(window.location.origin + "/upload-mod", {
-                method: 'POST',
-                body: formData,
-            });
+            // const response = await fetch(window.location.origin + "/upload-mod", {
+            //     method: 'POST',
+            //     body: formData,
+            // });
+
+            const response = await uploadFile(formData);
 
             if (!response.ok) {
                 document.getElementById("upload-content").innerHTML = `
@@ -113,8 +151,8 @@ async function upload() {
                 `;
             }
 
-            const result = await response.text();
-            console.log(result);
+            // const result = await response.text();
+            // console.log(result);
         } catch (error) {
             console.error('Error uploading file:', error);
             if (!debug) {

@@ -526,6 +526,26 @@ input[type="file"]::-webkit-file-upload-button {
     display: none;
 }
 
+#progress {
+    width: 90%;
+    height: 12px;
+    border-radius: 6px;
+    background-color: var(--body3);
+    position: relative;
+}
+
+#progress-bar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 0%;
+    height: 12px;
+    border-radius: 6px;
+    background-color: var(--action);
+    content: '';
+    transition: width 0.25s linear;
+}
+
 @keyframes word {
     from {
         opacity: 0;
