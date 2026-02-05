@@ -46,9 +46,9 @@ export function uploadMod(req, res) {
             return res.status(500).send(err);
         }
         isMap("./Resources/Client/" + uploadedFile.name)
-            .then(result => {
+            .then(async result => {
                 if (result) {
-                    unzipRunAndRemove("./Resources/Client/" + uploadedFile.name, "./Temp", uploadedFile.name.substring(0, uploadedFile.name.length - 4));
+                    await unzipRunAndRemove("./Resources/Client/" + uploadedFile.name, "./Temp", uploadedFile.name.substring(0, uploadedFile.name.length - 4));
                     if (!modsData.maps.includes(uploadedFile.name.substring(0, uploadedFile.name.length - 4))) {
                         modsData.maps.push(uploadedFile.name.substring(0, uploadedFile.name.length - 4));
                     }
@@ -192,13 +192,18 @@ function isMap(file) {
             zipfile.readEntry();
             zipfile.on("entry", entry => {
                 // Check if the entry is a directory named 'levels'
-                if (entry.fileName === "levels/" && /\/$/.test(entry.fileName)) {
+                if (entry.fileName.startsWith("levels/")) {
                     hasLevelsDir = true;
                 }
                 zipfile.readEntry();
             });
 
             zipfile.on("end", () => {
+                if (hasLevelsDir) {
+                    console.log("Mod is a map");
+                } else {
+                    console.log("Mod is not a map");
+                }
                 resolve(hasLevelsDir);
             });
 
