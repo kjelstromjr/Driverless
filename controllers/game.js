@@ -88,7 +88,7 @@ export function updateSettings(req, res) {
             console.log("Updating map in configuration...");
 
             try {
-                updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${modsData.mapNames.find(m => m.file === "stupid_monaco_1_8").map}/info.json"`);
+                updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${modsData.mapNames.find(m => m.file === map).map}/info.json"`);
             } catch (e) {
                 console.log("Map name not found, trying to use default");
                 updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${map}/info.json"`);
