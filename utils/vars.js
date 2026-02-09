@@ -36,6 +36,12 @@ export function varsSetup() {
         console.log(`mods.json was empty, initialized with defaults.`);
     }
     modsData = JSON.parse(fs.readFileSync(modsJsonPath, 'utf-8'));
+
+    if (modsData.mapNames === undefined) {
+        console.log("Adding mapNames to the mods data");
+        modsData.mapNames = [];
+    }
+
     addedMaps = modsData.maps;
 
     if (serverConfig === "") {
