@@ -47,10 +47,14 @@ export function uploadMod(req, res) {
         }
         isMap("./Resources/Client/" + uploadedFile.name)
             .then(async result => {
-                if (result) {
+                if (result.isMap) {
                     await unzipRunAndRemove("./Resources/Client/" + uploadedFile.name, "./Temp", uploadedFile.name.substring(0, uploadedFile.name.length - 4));
                     if (!modsData.maps.includes(uploadedFile.name.substring(0, uploadedFile.name.length - 4))) {
                         modsData.maps.push(uploadedFile.name.substring(0, uploadedFile.name.length - 4));
+                        modsData.mapNames.push({
+                            file: uploadedFile.name.substring(0, uploadedFile.name.length - 4),
+                            map: result.mapName
+                        });
                     }
                 } else {
                     if (!modsData.addons.includes(uploadedFile.name.substring(0, uploadedFile.name.length - 4))) {
@@ -188,12 +192,15 @@ function isMap(file) {
             }
             
             let hasLevelsDir = false;
+            let mapName = null;
 
             zipfile.readEntry();
             zipfile.on("entry", entry => {
-                // Check if the entry is a directory named 'levels'
                 if (entry.fileName.startsWith("levels/")) {
                     hasLevelsDir = true;
+                    if (entry.fileName.length > 7) {
+                        mapName = entry.fileName.split("/")[1];
+                    }
                 }
                 zipfile.readEntry();
             });
@@ -204,7 +211,11 @@ function isMap(file) {
                 } else {
                     console.log("Mod is not a map");
                 }
-                resolve(hasLevelsDir);
+                console.log(`Map Name: ${mapName}`);
+                resolve({
+                    isMap: hasLevelsDir,
+                    mapName: mapName
+                });
             });
 
             zipfile.on("error", err => {

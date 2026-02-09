@@ -1,6 +1,6 @@
 import AdmZip from 'adm-zip';
 import crypto from "crypto";
-import fs from "fs";
+import * as fs from "fs";
 import { spawn } from "child_process";
 
 import { __dirname, dataJsonPath, serverData } from './vars.js';

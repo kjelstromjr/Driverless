@@ -1,4 +1,4 @@
-import { addedMaps, currentMap, maxPlayers, maxCars, title, visibility, description, serverData, setSetup, __dirname } from "../utils/vars.js";
+import { addedMaps, currentMap, maxPlayers, maxCars, title, visibility, description, serverData, setSetup, __dirname, modsData } from "../utils/vars.js";
 import { beamProcess, restartBeam } from "../utils/beam.js";
 import { updateLineSync, broadcast } from "../utils/utils.js";
 
@@ -87,7 +87,12 @@ export function updateSettings(req, res) {
             // Update configuration with new map
             console.log("Updating map in configuration...");
 
-            updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${map}/info.json"`);
+            try {
+                updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${modsData.mapNames.find(m => m.file === "stupid_monaco_1_8").map}/info.json"`);
+            } catch (e) {
+                console.log("Map name not found, trying to use default");
+                updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${map}/info.json"`);
+            }
             updateLineSync(__dirname + "/ServerConfig.toml", 30, `MaxPlayers = ${players}`);
             updateLineSync(__dirname + "/ServerConfig.toml", 12, `MaxCars = ${cars}`);
             updateLineSync(__dirname + "/ServerConfig.toml", 18, `Name = "${serverName}"`);

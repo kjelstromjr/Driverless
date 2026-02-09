@@ -27,12 +27,12 @@ export let serverData = {
 
 export function varsSetup() {
     if (!fs.existsSync(modsJsonPath)) {
-        fs.writeFileSync(modsJsonPath, `{"maps":[],"addons":[]}`, 'utf8');
+        fs.writeFileSync(modsJsonPath, `{"maps":[],"addons":[], "mapNames":[]}`, 'utf8');
         console.log(`mods.json was created.`);
     }
 
     if (!modsData || modsData.trim() === '') {
-        fs.writeFileSync(modsJsonPath, `{"maps":[],"addons":[]}`, 'utf8');
+        fs.writeFileSync(modsJsonPath, `{"maps":[],"addons":[], "mapNames":[]}`, 'utf8');
         console.log(`mods.json was empty, initialized with defaults.`);
     }
     modsData = JSON.parse(fs.readFileSync(modsJsonPath, 'utf-8'));
@@ -51,6 +51,9 @@ export function varsSetup() {
         if (line.includes("Map")) {
             let mapLine = line.split("/");
             currentMap = mapLine[2];
+            if (modsData.mapNames.find(m => m.map === currentMap)) {
+                currentMap = modsData.mapNames.find(m => m.map === currentMap).file;
+            }
         } else if (line.includes("MaxPlayers")) {
             let playersLine = line.split(" ");
             maxPlayers = parseInt(playersLine[2]);

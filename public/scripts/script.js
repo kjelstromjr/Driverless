@@ -66,7 +66,7 @@ socket.onmessage = (event) => {
         if (version < 1) {
             version = json.version;
         } else {
-            if (reloadOnUpdate) {
+            if (reloadOnUpdate && !uploading) {
                 window.location.reload();
             }
         }

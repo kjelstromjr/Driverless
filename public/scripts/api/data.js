@@ -1,3 +1,5 @@
+let uploading = false;
+
 function restart() {
     window.clearInterval(dataGetter);
     closePopups();
@@ -126,6 +128,7 @@ async function upload() {
             //     body: formData,
             // });
 
+            uploading = true;
             const response = await uploadFile(formData);
 
             if (!response.ok) {

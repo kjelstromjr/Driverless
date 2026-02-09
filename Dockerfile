@@ -1,12 +1,10 @@
-FROM ubuntu:22.04
+FROM node:20-bookworm
 
 # Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
     liblua5.3-dev \
     lua-socket \
     lua-json \
