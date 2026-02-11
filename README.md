@@ -12,19 +12,21 @@ Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.
 
 1. Install Docker. We recommend installing [Docker Desktop](https://docs.docker.com/desktop/) for simplicity
 
-2. Create a new folder where you want to store the server and open a terminal in it
+2. Create a new folder where you want to store the server
 
-3. Create a new file named `docker-compose.yaml`
+3. Download [`docker-compose.yaml`](https://github.com/kjelstromjr/Driverless/blob/main/docker-compose.yaml) and put it in your new folder
 
-4. Start Driverless with Docker
+4. Open a terminal in the folder
+
+5. Start Driverless with Docker
 
 ```bash
 docker compose up -d
 ```
 
-4. You should now have a fully functional Driverless and Beammp server!
+6. You should now have a fully functional Driverless and Beammp server!
 
-9. Access the Driverless website using http://localhost
+7. Access the Driverless website using http://localhost
 
 ## Starting Server
 To start up the server, simply run:
