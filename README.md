@@ -12,22 +12,15 @@ Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.
 
 1. Install Docker. We recommend installing [Docker Desktop](https://docs.docker.com/desktop/) for simplicity
 
-2. Clone the respository with git or download the zip file for the latest version
+2. Create a new folder where you want to store the server and open a terminal in it
+
+3. Start Driverless with Docker
 
 ```bash
-git clone https://github.com/kjelstromjr/Driverless
+docker compose up -d
 ```
 
-4. Open a terminal and change the current directory to the Driverless folder
-
-5. Start Driverless with the following command:
-
-```bash
-docker-compose up
-```
-> This may take a while since the image needs to build for the first time
-
-5. You should now have a fully functional Driverless and Beammp server!
+4. You should now have a fully functional Driverless and Beammp server!
 
 9. Access the Driverless website using http://localhost
 
@@ -35,7 +28,7 @@ docker-compose up
 To start up the server, simply run:
 
 ```bash
-docker-compose up
+docker compose up -d
 ```
 
 The webpage can now be accessed at http://localhost
@@ -49,30 +42,26 @@ When you open up the webpage for the first time, you will see a setup page. Here
 
 #### Updates:
 Changes to the code of this project can applied using the following steps:
-1. If you used git to download the original code, use:
+1. Pull the latest image from Docker Hub
 
 ```bash
-git pull
+docker compose pull
 ```
 
-1. If you downloaded using the version, download the latest version. You will have to copy the following to your new folder: `Resources`, `Roads`, `mods.json`
-
-2. Update the image
+2. Restart the server
 
 ```bash
-docker-compose up --build
+docker compose up -d
 ```
-
-Any updates to the BeamMP server file needs to be manually redownloaded from the offical [BeamMP Github](https://github.com/BeamMP/BeamMP-Server/releases/)
 
 #### Administration:
 You can access the admin mode using Ctrl+Alt+A. This will give you full control over the server, including choosing what the public has access to.
 
 #### HTTPS:
-To enable HTTPS, open `server.config.json` and change `enable` under `https` to `true`. Then add the locations of your SSL key and certificate in `keyPath` and `certPath`.
+To enable HTTPS, open `config/server.config.json` and change `enable` under `https` to `true`. Then add the locations of your SSL key and certificate in `keyPath` and `certPath`.
 
 #### Changing the port:
-To change the port of Driverless, open `server.config.json` and change the port option
+To change the port of Driverless, open `config/server.config.json` and change the port option
 
 #### Going Public:
 Making your server public requires that you setup your router to forward port 80 (Default Driverless) and 30814 (Beammp). Allow TCP and UDP for both.
