@@ -14,7 +14,9 @@ Side note: Check out the [Offical BeamMP Installation Page](https://docs.beammp.
 
 2. Create a new folder where you want to store the server and open a terminal in it
 
-3. Start Driverless with Docker
+3. Create a new file named `docker-compose.yaml`
+
+4. Start Driverless with Docker
 
 ```bash
 docker compose up -d
