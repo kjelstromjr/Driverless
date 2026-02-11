@@ -1,6 +1,6 @@
 
 # Driverless
-A web-based UI and mod managment system for a [BeamMP](https://docs.beammp.com/) server.
+A web-based UI and mod management system for a [BeamMP](https://docs.beammp.com/) server.
 
 
 ## About
