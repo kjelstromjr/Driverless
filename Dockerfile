@@ -20,17 +20,18 @@ COPY package*.json ./
 # Install Node.js dependencies
 RUN npm install
 
-# Download BeamMP Server using curl
-RUN curl -L -o BeamMP-Server.ubuntu.22.04.x86_64 \
-    https://github.com/BeamMP/BeamMP-Server/releases/download/v3.9.0/BeamMP-Server.ubuntu.22.04.x86_64 \
-    && chmod +x BeamMP-Server.ubuntu.22.04.x86_64
-
 # Create necessary directory structure
-RUN mkdir -p Resources/Server/DriverlessPlugin \
-    && mkdir -p Resources/Disabled
+RUN mkdir -p beammp/Resources/Server/DriverlessPlugin \
+    && mkdir -p beammp/Resources/Disabled
 
 # Copy application files
 COPY . .
+
+# # Download BeamMP Server using curl
+# RUN mkdir -p beammp && \
+#     curl -L -o beammp/BeamMP-Server.ubuntu.22.04.x86_64 \
+#       https://github.com/BeamMP/BeamMP-Server/releases/download/v3.9.0/BeamMP-Server.ubuntu.22.04.x86_64 && \
+#     chmod +x beammp/BeamMP-Server.ubuntu.22.04.x86_64
 
 # Make road-finder executable
 RUN chmod +x /app/road-finder
@@ -40,9 +41,9 @@ RUN echo "Contents of /app:" && ls -la && \
     echo "Contents of /app/plugins:" && ls -la plugins/ || echo "plugins directory not found"
 
 # Copy the Driverless plugin to the correct location
-RUN cp plugins/Driverless.lua Resources/Server/DriverlessPlugin/ && \
+RUN cp plugins/Driverless.lua beammp/Resources/Server/DriverlessPlugin/ && \
     echo "Successfully copied Driverless.lua" && \
-    ls -la Resources/Server/DriverlessPlugin/
+    ls -la beammp/Resources/Server/DriverlessPlugin/
 
 # Expose ports
 EXPOSE 80 30814

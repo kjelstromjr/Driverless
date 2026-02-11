@@ -1,17 +1,16 @@
 services:
   driverless:
+    image: kjelstromjr/driverless:latest 
     build: .
-    container_name: driverless-server
+    pull_policy: missing
+    container_name: driverless
     ports:
       - "80:80"           # Web interface (adjust if you change PORT in main.js)
       - "30814:30814/tcp"     # BeamMP server port
       - "30814:30814/udp"     
     volumes:
-      - ./Resources:/app/Resources  # Persist server data and mods
-      - ./ServerConfig.toml:/app/ServerConfig.toml  # Persist configuration
-      - ./main.js:/app/main.js  # Allow port configuration changes
-      - ./Roads:/app/Roads  # Persist extracted road data
-      - ./mods.json:/app/mods.json
-      - ./data.json:/app/data.json
-      - ./server.config.json:/app/server.config.json
+        - ./Roads:/app/Roads
+        - ./config:/app/config
+        - ./beammp:/app/beammp
+
     restart: unless-stopped

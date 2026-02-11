@@ -4,27 +4,62 @@ import fs from "fs";
 import { varsSetup, __dirname } from "./vars.js";
 import { beamSetup } from "./beam.js";
 
-const pluginDir = path.join(__dirname, "Resources/Server/DriverlessPlugin");
+const pluginDir = path.join(__dirname, "beammp/Resources/Server/DriverlessPlugin");
 const sourceFile = path.join(__dirname, "plugins/Driverless.lua");
 const destFile = path.join(pluginDir, "Driverless.lua");
 
 export function setupServer() {
 
+    checkStructure();
     ensurePluginFile();
 
-    if (!fs.existsSync('./Resources/Disabled')) {
-        fs.mkdirSync('./Resources/Disabled', { recursive: true });
+    if (!fs.existsSync('./beammp/Resources/Disabled')) {
+        fs.mkdirSync('./beammp/Resources/Disabled', { recursive: true });
     }
 
-    varsSetup();
     beamSetup();
+    setTimeout(varsSetup, 1000);
+}
+
+function checkStructure() { // Finish for /config and /Roads
+    let dirs = ["./beammp/Resources", "./beammp/Resources/Client", "./beammp/Resources/Disabled", "./beammp/Resources/Server"];
+
+    for (let i = 0; i < dirs.length; i++) {
+        if (!fs.existsSync(dirs[i])) {
+            fs.mkdirSync(dirs[i], {recursive: true});
+            console.log(`Created ${dirs[i]}`);
+        }
+    }
+
+    if (!fs.existsSync("./beammp/BeamMP-Server.ubuntu.22.04.x86_64")) {
+        fs.copyFileSync("./beammp-src/BeamMP-Server.ubuntu.22.04.x86_64", "./beammp/BeamMP-Server.ubuntu.22.04.x86_64");
+        console.log("Copied beammp executable");
+    }
+
+    let configFiles = fs.readdirSync("./config-src");
+
+    for (let i = 0; i < configFiles.length; i++) {
+        if (!fs.existsSync(`./config/${configFiles[i]}`)) {
+            fs.copyFileSync(`./config-src/${configFiles[i]}`, `./config/${configFiles[i]}`);
+            console.log(`Copied ./config/${configFiles[i]}`);
+        }
+    }
+
+    let roadsFiles = fs.readdirSync("./Roads-src");
+
+    for (let i = 0; i < roadsFiles.length; i++) {
+        if (!fs.existsSync(`./Roads/${roadsFiles[i]}`)) {
+            fs.copyFileSync(`./Roads-src/${roadsFiles[i]}`, `./Roads/${roadsFiles[i]}`);
+            console.log(`Copied ./Roads/${roadsFiles[i]}`);
+        }
+    }
 }
 
 function ensurePluginFile() {
   // Create directory if missing
   if (!fs.existsSync(pluginDir)) {
-    console.log("DriverlessPlugin directory missing — creating it...");
     fs.mkdirSync(pluginDir, { recursive: true });
+    console.log("Created /beammp/Resources/Server/DriverlessPlugin");
   }
 
   // If the file is already in the directory, stop
@@ -51,7 +86,7 @@ function ensurePluginFile() {
             throw err;
         }
     }
-    console.log("Lua file moved successfully!");
+    console.log("Lua file moved");
   } catch (err) {
     console.error("Error moving file:", err);
   }

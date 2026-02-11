@@ -1,0 +1,8 @@
+{
+    "https": {
+        "enabled": false,
+        "keyPath": "",
+        "certPath": ""
+    },
+    "port": 3000
+}

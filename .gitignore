@@ -8,8 +8,12 @@ Server.old.log
 
 *.toml
 
-BeamMP-Server*
-
 Resources/
 
 .vscode
+
+beammp/
+
+Roads/
+
+config/

@@ -21,7 +21,7 @@ export function adminSetup(req, res) {
             serverData.allowed = ["mods", "map", "numPlayers", "numCars"];
 
             fs.writeFileSync(dataJsonPath, JSON.stringify(serverData), 'utf8');
-            updateLineSync(__dirname + "/ServerConfig.toml", 29, `AuthKey = "${serverData.key}"`);
+            updateLineSync(__dirname + "/beammp/ServerConfig.toml", 29, `AuthKey = "${serverData.key}"`);
 
             console.log("The process is about to exit...");
             console.log("If you are viewing the logs without the docker-compose \"-d\" flag (ex: docker-compose up), you may need to exit to view the logs or open a new terminal");

@@ -88,16 +88,16 @@ export function updateSettings(req, res) {
             console.log("Updating map in configuration...");
 
             try {
-                updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${modsData.mapNames.find(m => m.file === map).map}/info.json"`);
+                updateLineSync(__dirname + "/beammp/ServerConfig.toml", 31, `Map = "/levels/${modsData.mapNames.find(m => m.file === map).map}/info.json"`);
             } catch (e) {
                 console.log("Map name not found, trying to use default");
-                updateLineSync(__dirname + "/ServerConfig.toml", 31, `Map = "/levels/${map}/info.json"`);
+                updateLineSync(__dirname + "/beammp/ServerConfig.toml", 31, `Map = "/levels/${map}/info.json"`);
             }
-            updateLineSync(__dirname + "/ServerConfig.toml", 30, `MaxPlayers = ${players}`);
-            updateLineSync(__dirname + "/ServerConfig.toml", 12, `MaxCars = ${cars}`);
-            updateLineSync(__dirname + "/ServerConfig.toml", 18, `Name = "${serverName}"`);
-            updateLineSync(__dirname + "/ServerConfig.toml", 19, `Private = ${privateV}`);
-            updateLineSync(__dirname + "/ServerConfig.toml", 11, `Description = "${desc}"`);
+            updateLineSync(__dirname + "/beammp/ServerConfig.toml", 30, `MaxPlayers = ${players}`);
+            updateLineSync(__dirname + "/beammp/ServerConfig.toml", 12, `MaxCars = ${cars}`);
+            updateLineSync(__dirname + "/beammp/ServerConfig.toml", 18, `Name = "${serverName}"`);
+            updateLineSync(__dirname + "/beammp/ServerConfig.toml", 19, `Private = ${privateV}`);
+            updateLineSync(__dirname + "/beammp/ServerConfig.toml", 11, `Description = "${desc}"`);
 
             // Restart the BeamMP server process asynchronously
             console.log("Starting new process...");

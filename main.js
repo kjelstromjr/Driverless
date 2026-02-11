@@ -16,7 +16,9 @@ import * as adminController from "./controllers/admin.js";
 import * as gameController from "./controllers/game.js";
 import * as modsController from "./controllers/mods.js";
 
-let config = JSON.parse(fs.readFileSync(__dirname + "/server.config.json"));
+setupServer();
+
+let config = JSON.parse(fs.readFileSync(__dirname + "/config/server.config.json"));
 
 const PORT = config.port;
 
@@ -40,9 +42,9 @@ wss.on("connection", (ws) => {
     console.log("Client connected for player positions");
 });
 
-setSockerServer(wss);
 
-setupServer();
+
+setSockerServer(wss);
 
 app.use(express.static('public'));
 

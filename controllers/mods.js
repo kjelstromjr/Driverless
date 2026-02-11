@@ -5,8 +5,8 @@ import { unzipRunAndRemove } from "../utils/utils.js";
 import { modsData, modsJsonPath, __dirname } from "../utils/vars.js";
 
 export function mods(req, res) {
-    let modsPath = __dirname + "/Resources/Client"; // replace with your directory path
-    let disabledPath = __dirname + "/Resources/Disabled";
+    let modsPath = __dirname + "/beammp/Resources/Client"; // replace with your directory path
+    let disabledPath = __dirname + "/beammp/Resources/Disabled";
 
     let data = {};
 
@@ -41,14 +41,14 @@ export function uploadMod(req, res) {
     const uploadedFile = req.files.file;
 
     // Save the file to the specified directory
-    uploadedFile.mv("./Resources/Client/" + uploadedFile.name, (err) => {
+    uploadedFile.mv("./beammp/Resources/Client/" + uploadedFile.name, (err) => {
         if (err) {
             return res.status(500).send(err);
         }
-        isMap("./Resources/Client/" + uploadedFile.name)
+        isMap("./beammp/Resources/Client/" + uploadedFile.name)
             .then(async result => {
                 if (result.isMap) {
-                    await unzipRunAndRemove("./Resources/Client/" + uploadedFile.name, "./Temp", uploadedFile.name.substring(0, uploadedFile.name.length - 4));
+                    await unzipRunAndRemove("./beammp/Resources/Client/" + uploadedFile.name, "./Temp", uploadedFile.name.substring(0, uploadedFile.name.length - 4));
                     if (!modsData.maps.includes(uploadedFile.name.substring(0, uploadedFile.name.length - 4))) {
                         modsData.maps.push(uploadedFile.name.substring(0, uploadedFile.name.length - 4));
                         modsData.mapNames.push({
@@ -86,7 +86,7 @@ export function deleteMods(req, res) {
             let mod = toDelete[i];
 
             try {
-                fs.unlinkSync(`./Resources/Disabled/${mod}.zip`);
+                fs.unlinkSync(`./beammp/Resources/Disabled/${mod}.zip`);
             } catch (err) {
                 console.log("Failed to delete file");
             }
@@ -119,19 +119,19 @@ export function changeMods(req, res) {
             try {
 
                 try {
-                    fs.renameSync(`./Resources/Disabled/${active[i]}.zip`, `./Resources/Client/${active[i]}.zip`)
+                    fs.renameSync(`./beammp/Resources/Disabled/${active[i]}.zip`, `./beammp/Resources/Client/${active[i]}.zip`)
                 } catch (err) {
                     if (err.code === 'EXDEV') {
                         // Copy + unlink fallback
-                        fs.copyFileSync(`./Resources/Disabled/${active[i]}.zip`, `./Resources/Client/${active[i]}.zip`);
-                        fs.unlinkSync(`./Resources/Disabled/${active[i]}.zip`);
+                        fs.copyFileSync(`./beammp/Resources/Disabled/${active[i]}.zip`, `./beammp/Resources/Client/${active[i]}.zip`);
+                        fs.unlinkSync(`./beammp/Resources/Disabled/${active[i]}.zip`);
                     } else {
                         throw err;
                     }
                 }
 
                 try {
-                    let result = await isMap("./Resources/Client/" + active[i] + ".zip");
+                    let result = await isMap("./beammp/Resources/Client/" + active[i] + ".zip");
                     if (result) {
                         modsData.maps.push(active[i]);
                     } else {
@@ -158,12 +158,12 @@ export function changeMods(req, res) {
 
             try {
                 try {
-                    fs.renameSync(`./Resources/Client/${disabled[i]}.zip`, `./Resources/Disabled/${disabled[i]}.zip`)
+                    fs.renameSync(`./beammp/Resources/Client/${disabled[i]}.zip`, `./beammp/Resources/Disabled/${disabled[i]}.zip`)
                 } catch (err) {
                     if (err.code === 'EXDEV') {
                         // Copy + unlink fallback
-                        fs.copyFileSync(`./Resources/Client/${disabled[i]}.zip`, `./Resources/Disabled/${disabled[i]}.zip`);
-                        fs.unlinkSync(`./Resources/Client/${disabled[i]}.zip`);
+                        fs.copyFileSync(`./beammp/Resources/Client/${disabled[i]}.zip`, `./beammp/Resources/Disabled/${disabled[i]}.zip`);
+                        fs.unlinkSync(`./beammp/Resources/Client/${disabled[i]}.zip`);
                     } else {
                         throw err;
                     }

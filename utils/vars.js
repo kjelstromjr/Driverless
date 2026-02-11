@@ -5,10 +5,10 @@ import path from "path";
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = "/app/";
 
-export const dataJsonPath = path.join(__dirname, "data.json");
-export const modsJsonPath = path.join(__dirname, "mods.json");
-export let serverConfig = fs.readFileSync("./ServerConfig.toml", "utf8");
-export let modsData = fs.readFileSync(modsJsonPath, 'utf-8');
+export const dataJsonPath = path.join(__dirname, "/config/data.json");
+export const modsJsonPath = path.join(__dirname, "/config/mods.json");
+export let serverConfig = null;
+export let modsData = null;
 export let addedMaps = [];
 export let maxPlayers = -1;
 export let maxCars = -1;
@@ -26,6 +26,9 @@ export let serverData = {
 }
 
 export function varsSetup() {
+    serverConfig = fs.readFileSync("./beammp/ServerConfig.toml", "utf8");
+    modsData = fs.readFileSync(modsJsonPath, 'utf-8');
+
     if (!fs.existsSync(modsJsonPath)) {
         fs.writeFileSync(modsJsonPath, `{"maps":[],"addons":[], "mapNames":[]}`, 'utf8');
         console.log(`mods.json was created.`);
@@ -46,7 +49,7 @@ export function varsSetup() {
 
     if (serverConfig === "") {
         console.log("Failed to read ServerConfig.toml. Retrying...");
-        serverConfig = fs.readFileSync("./ServerConfig.toml", "utf8");
+        serverConfig = fs.readFileSync("./beammp/ServerConfig.toml", "utf8");
     }
     
     serverConfig = serverConfig.split("\n");
