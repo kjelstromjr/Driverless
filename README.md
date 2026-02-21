@@ -2,6 +2,7 @@
 # Driverless
 A web-based UI and mod management system for a [BeamMP](https://docs.beammp.com/) server.
 
+<img width="2255" height="1500" alt="Screenshot 2026-02-16 173448" src="https://github.com/user-attachments/assets/981d1d5d-a15c-4b05-8c23-d963140a8072" />
 
 ## About
 Driverless features a live map of the server showing the current postions of all the players in the game. It also includes a menu to change the map, max players, and max cars. Mods can also be added and enabled/disabled within the UI.
